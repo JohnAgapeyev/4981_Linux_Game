@@ -2,6 +2,7 @@
 #define SERVER_H
 
 #include <cstdarg>
+#include <limits.h>
 
 //Temp variable to represent client count
 #define CLIENT_COUNT 10
@@ -9,8 +10,10 @@
 #define LISTEN_PORT_UDP 35222
 #define LISTEN_PORT_TCP 35223
 #define TICK_RATE 20
-#define IN_PACKET_SIZE 1024 //TBD
-#define OUT_PACKET_SIZE 1024 //TBD
+//we dont ever, ever want to have to resize. just max it
+#define IN_PACKET_SIZE USHRT_MAX
+#define OUT_PACKET_SIZE USHRT_MAX
+
 #define SYNC_IN 32 //name padded with nulls
 #define NAMELEN 32 //same as above but kept seperate for clarity of purpose
 #define SYNC_OUT 33 //name padded with nulls + id
@@ -31,7 +34,8 @@ typedef struct Clients{
 } Client;
 
 extern const long long microSecPerTick;
-extern char outputPacket[OUT_PACKET_SIZE];
+extern char outputPacket[];
+extern int outputLength;
 extern int listenSocketUDP;
 extern int listenSocketTCP;
 extern int sendSocketUDP;
