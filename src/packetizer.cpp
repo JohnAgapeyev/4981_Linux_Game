@@ -29,6 +29,37 @@
 #include <string>
 #include "packetizer.h"
 #include "UDPHeaders.h"
+
+inline void Packetizer::parseControlMsg(const void * msgBuff, size_t bytesReads){
+  char *pBuff;
+  const int32_t * id;
+  id = reinterpret_cast<const int32_t *>(msgBuff); // cast the buff to read 4 bytes at a time
+  pBuff = reinterpret_cast<char *>(const_cast<void *>(msgBuff)); // cast the buff to read 4 bytes at a time
+  pBuff += sizeof(int32_t);
+
+  if(*pBuff == '/'){
+    std::string msg(pBuff, bytesReads-sizeof(int32_t)-sizeof(char));
+
+    //NOT SURE WHAT TO PUT HERE
+    if(!msg.compare("ready")){
+        std::cout << "Player " << id << "is ready!";
+    }
+    else if (!msg.compare("unready")){
+      /* code */
+              std::cout << "Player " << id << "is unready";
+    }
+    else{
+      std::cout << " Msg rcvd: " << msg;
+    }
+  }
+
+  else
+  {
+    std::cout << "\nId: " << id << "\tMsg: " << pBuff;
+  }
+
+}
+
 /*------------------------------------------------------------------------------
 -- FUNCTION: parse
 --
@@ -56,7 +87,7 @@
 -- note: the packet passed from the server must match
 -- the gamesync packet exactly
 --------------------------------------------------------------------------*/
-void Packetizer::parseGameSync(const void * syncBuff, size_t bytesReads)
+inline void Packetizer::parseGameSync(const void * syncBuff, size_t bytesReads)
 {
   int32_t *pBuff;
   int32_t *pEnd;
@@ -153,34 +184,4 @@ void Packetizer::parseGameSync(const void * syncBuff, size_t bytesReads)
       }
      }
    }
-}
-
-void Packetizer::parseControlMsg(const void * msgBuff, size_t bytesReads){
-  char *pBuff;
-  const int32_t * id;
-  id = reinterpret_cast<const int32_t *>(msgBuff); // cast the buff to read 4 bytes at a time
-  pBuff = reinterpret_cast<char *>(const_cast<void *>(msgBuff)); // cast the buff to read 4 bytes at a time
-  pBuff += sizeof(int32_t);
-
-  if(*pBuff == '/'){
-    std::string msg(pBuff, bytesReads-sizeof(int32_t)-sizeof(char));
-
-    //NOT SURE WHAT TO PUT HERE
-    if(!msg.compare("ready")){
-        std::cout << "Player " << id << "is ready!";
-    }
-    else if (!msg.compare("unready")){
-      /* code */
-              std::cout << "Player " << id << "is unready";
-    }
-    else{
-      std::cout << " Msg rcvd: " << msg;
-    }
-  }
-
-  else
-  {
-    std::cout << "\nId: " << id << "\tMsg: " << pBuff;
-  }
-
 }
