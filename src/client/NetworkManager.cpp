@@ -13,8 +13,13 @@
 #include <thread>
 #include <errno.h>
 #include <sys/epoll.h>
+#include <string>
+#include <iterator>
+
 #include "NetworkManager.h"
 #include "../packetizer.h"
+
+using namespace std;
 
 NetworkManager& NetworkManager::instance() {
     static NetworkManager sInstance;
@@ -46,36 +51,35 @@ the client's username, receives the integer id assigned to the client, and
 then received the integer ids and usernames of other clients connecting to
 the server.
 --------------------------------------------------------------------------*/
-void NetworkManager::handshake(const char *ip, const char *username, int numPlayers) {
-	TCPConnect(ip);
+void NetworkManager::handshake(const char *ip, const char *username) {
 
-	char users[MAX_USERS][UNAME_SIZE];
-	char sendline[UNAME_SIZE];
-	char recvline[PLAYERPACK_SIZE + 1];
+    TCPConnect(ip);
+	char sendline[STD_BUFFSIZE] = {0};
+    int bytesToSend;
 
-    memset(sendline, '\0', UNAME_SIZE);
-	strcpy(sendline, username);
+    //packetize the username first,
+    bytesToSend = Packetizer::packControlMsg(sendline, STD_BUFFSIZE, username);
+    //send the username to server.
+	writeTCPSocket(sendline, bytesToSend);
 
-	writeTCPSocket(sendline, UNAME_SIZE);
-
-	while(numPlayers--) {
-        readTCPSocket(recvline, sizeof(recvline));
-		strncpy(users[(int)recvline[PLAYERPACK_SIZE - 1]], recvline, sizeof(recvline));
-	}
-
-	close(_sockTCP);
-
+    //create UDPSocket
     std::shared_ptr<UDPSocket> udpSock = std::make_shared<UDPSocket>(ip);
-    std::thread t(&NetworkManager::runUDPClient, this, udpSock);
-    t.detach();
+    //std::thread t(&NetworkManager::runUDPClient, this, udpSock);
+    //t.detach();
+}
+
+void NetworkManager::closeConnection()
+{
+    close(_sockTCP);
 }
 
 void NetworkManager::runUDPClient(std::shared_ptr<UDPSocket> udpSock) {
     char buffer[SYNC_PACKET_MAX];
-    Packetizer packetizer;
+    int packetSize;
+    //Packetizer packetizer;
     for(;;) {
-        int packetSize = udpSock.get()->recvFromServ(buffer, SYNC_PACKET_MAX);
-        packetizer.parse(buffer, packetSize);
+        packetSize = udpSock.get()->recvFromServ(buffer, SYNC_PACKET_MAX);
+        Packetizer::parseGameSync(buffer, packetSize);
     }
 }
 
@@ -143,17 +147,13 @@ socket stored as a private member of the Client object.
 --------------------------------------------------------------------------*/
 int NetworkManager::readTCPSocket(char *buf, int len) {
 	int res = 0;
-	int ttlsent = 0, bytesleft = len;
-	while (ttlsent < len) {
-			if ((res = read(_sockTCP, buf + ttlsent, bytesleft)) < 0 ) {
-				perror("read");
-				return res;
-			}
-			ttlsent += res;
-			bytesleft -= res;
+	if ( (res = read(_sockTCP, buf, len) ) < 0 ) {
+		perror("read");
+		return res;
 	}
 	return res;
 }
+
 /*--------------------------------------------------------------------------
 -- FUNCTION: TCPConnect
 --
@@ -178,8 +178,8 @@ int NetworkManager::readTCPSocket(char *buf, int len) {
 int NetworkManager::TCPConnect(const char * ip_addr) {
 	if (ip_addr == NULL || inet_addr(ip_addr) == 0 ) {
 		std::cerr << "Missing or Incorrect IP addr."
-			<< "\n IP Address must be in the form x.x.x.x"
-			<< std::endl;
+        		  << "\n IP Address must be in the form x.x.x.x"
+        		  << std::endl;
 		return -1;
 	}
 
@@ -202,4 +202,24 @@ int NetworkManager::TCPConnect(const char * ip_addr) {
 	}
 
 	return 0;
+}
+
+ //Ey:- Mar 13 17- inserts a player in a map of all players of the game
+void NetworkManager::insertplayer(int32_t id, const char * username)
+{
+    string stdStrUsername(username);
+    insertplayer(id,stdStrUsername);
+}
+
+ //Ey:- Mar 13 17- inserts a player in a map of all players of the game
+ //* Overlaoded function
+void NetworkManager::insertplayer(int32_t id, string & username)
+{
+    _players.insert( std::pair<int,string>(id,username) );
+}
+
+ //Ey:- Mar 13 17- retrieves the user name given a 
+const std::string & NetworkManager::getNameFromId(int32_t id)
+{
+    return (_players.find(id)->second);
 }

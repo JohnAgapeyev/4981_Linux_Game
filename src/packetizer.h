@@ -32,8 +32,10 @@
 class Packetizer
 {
   public:
-    static inline void parseGameSync(const void * syncBuff, size_t bytesReads);
-    static inline void parseControlMsg(const void * msgBuff, size_t bytesReads);
+    static void parseGameSync(const void * syncBuff, size_t bytesReads);
+    static void parseControlMsg(const void * msgBuff, size_t bytesReads);
+    inline static int  packControlMsg(char * buff, size_t bufflen, const char * msg, int32_t id = -1, const char type = 'T');
+    //static void packGamePlayMsg(const void * msgBuff, size_t bytesReads);
   private:
 
 };
