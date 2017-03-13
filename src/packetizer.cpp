@@ -31,7 +31,7 @@
 #include "packetizer.h"
 #include "UDPHeaders.h"
 
-inline int Packetizer::packControlMsg(char * buff, size_t bufflen, const char * msg, int32_t id , const char type)
+int Packetizer::packControlMsg(char * buff, size_t bufflen, const char * msg, int32_t id , const char type)
 {
     //insert the id of user
     *(reinterpret_cast<int32_t *>(buff)) = id;
@@ -41,7 +41,7 @@ inline int Packetizer::packControlMsg(char * buff, size_t bufflen, const char * 
     return static_cast<int>(strlen(msg))+5;
 }
 
-void parseControlMsg(const void * msgBuff, size_t bytesReads){
+void Packetizer::parseControlMsg(const void * msgBuff, size_t bytesReads){
     char *pBuff;
     int32_t id;
     id = *(reinterpret_cast<const int32_t *>(msgBuff));

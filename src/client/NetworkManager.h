@@ -34,12 +34,18 @@ public:
     UDPSocket& getSockUDP() {return _sockUDP;};
     void handshake(const char * ip, const char * uname);
     void closeConnection();
+
     // EY - Mar 12: moved from private to public
     int writeTCPSocket(const char *, int);
     int readTCPSocket(char *, int);
+    // EY -Mar 12 : added for select
+    int getSockTCP(){return _sockTCP;};
+
+    // EY: Mar 12: added for player id-username mapping
     void insertplayer(int32_t id, const char * username);
     void insertplayer(int32_t id, std::string & username);
     const std::string & getNameFromId(int32_t id);
+
 private:
     int _sockTCP;
     UDPSocket _sockUDP;

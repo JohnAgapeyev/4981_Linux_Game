@@ -24,7 +24,7 @@ void TCPConnect(const char * ip_addr);
 
 int _sockTCP = 0;
 
-/*int main(void) {
+int main(void) {
     fd_set readSet, initSet;
     char buffer[USHRT_MAX];
     int bytesRead;
@@ -59,7 +59,7 @@ int _sockTCP = 0;
         }
     }
 }
-*/
+
 // void parse(char *buffer, int len) {
 //     //parse buffer for commands
 //

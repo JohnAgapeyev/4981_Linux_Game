@@ -63,7 +63,8 @@ void NetworkManager::handshake(const char *ip, const char *username) {
 	writeTCPSocket(sendline, bytesToSend);
 
     //create UDPSocket
-    std::shared_ptr<UDPSocket> udpSock = std::make_shared<UDPSocket>(ip);
+    _sockUDP = std::move(UDPSocket(ip));
+    //std::shared_ptr<UDPSocket> udpSock = std::make_shared<UDPSocket>(ip);
     //std::thread t(&NetworkManager::runUDPClient, this, udpSock);
     //t.detach();
 }
@@ -218,7 +219,7 @@ void NetworkManager::insertplayer(int32_t id, string & username)
     _players.insert( std::pair<int,string>(id,username) );
 }
 
- //Ey:- Mar 13 17- retrieves the user name given a 
+ //Ey:- Mar 13 17- retrieves the user name given a
 const std::string & NetworkManager::getNameFromId(int32_t id)
 {
     return (_players.find(id)->second);
