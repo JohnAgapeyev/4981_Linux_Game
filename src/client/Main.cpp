@@ -90,7 +90,7 @@ int main (int argc, char * argv[])
             int bytesToSend;
             string str;
             getline(cin, str);
-            bytesToSend = Packetizer::packControlMsg(buffsend, STD_BUFFSIZE, str.c_str());
+            bytesToSend = Packetizer::packControlMsg(buffsend, STD_BUFFSIZE, str.c_str(), myid);
             netMan.writeTCPSocket(buffsend, bytesToSend);
         }
 
@@ -108,8 +108,7 @@ int main (int argc, char * argv[])
                     precvBuff = buffrecv + 6;
                 }
                 netMan.insertplayer(myid,precvBuff);
-            }
-            else{ // if game is going, must be player message
+            }else{ // if game is going, must be player message
                 { // semantically separated to signify parseControlMsg
                     playerid = *(reinterpret_cast<const int32_t *>(buffrecv));
                     buffrecv[bRead] = '\0';
