@@ -23,7 +23,7 @@
 
 static bool running = false;
 static bool connected = false;
-unsigned int myid;
+int32_t myid;
 
 
 void sigHandler(int sig);
@@ -101,8 +101,7 @@ int main (int argc, char * argv[])
                 break;
             }
 
-            if(!running)
-            {
+            if(!running){
                 { // semantically separated to signify parseControlMsg
                     playerid = *(reinterpret_cast<const int32_t *>(buffrecv));
                     buffrecv[bRead] = '\0';
@@ -129,8 +128,10 @@ void sigHandler(int sig)
 {
     if (sig == SIGINT)
     {
+        connected = false;
         running = false;
     }
+    raise(SIGKILL);
 }
 
 
