@@ -54,16 +54,16 @@ the server.
 void NetworkManager::handshake(const char *ip, const char *username) {
 
     TCPConnect(ip);
-	char sendline[STD_BUFFSIZE] = {0};
+    char sendline[STD_BUFFSIZE] = {0};
     int bytesToSend;
 
     //packetize the username first,
     bytesToSend = Packetizer::packControlMsg(sendline, STD_BUFFSIZE, username);
     //send the username to server.
-	writeTCPSocket(sendline, bytesToSend);
+    writeTCPSocket(sendline, bytesToSend);
 
     //create UDPSocket
-    _sockUDP = std::move(UDPSocket(ip));
+    _sockUDP = UDPSocket(ip);
     //std::shared_ptr<UDPSocket> udpSock = std::make_shared<UDPSocket>(ip);
     //std::thread t(&NetworkManager::runUDPClient, this, udpSock);
     //t.detach();
@@ -108,17 +108,17 @@ void NetworkManager::runUDPClient(std::shared_ptr<UDPSocket> udpSock) {
 -- This function loops the writing to the TCP Socket
 --------------------------------------------------------------------------*/
 int NetworkManager::writeTCPSocket(const char * msg, int len) {
-	int res = 0;
-	int ttlsent = 0, bytesleft = len;
-	while (ttlsent < len) {
-			if ((res = send(_sockTCP, msg + ttlsent, bytesleft, 0)) < 0 ) {
-				perror("TCP write error");
-				return res;
-			}
-			ttlsent += res;
-			bytesleft -= res;
-	}
-	return 0;
+    int res = 0;
+    int ttlsent = 0, bytesleft = len;
+    while (ttlsent < len) {
+        if ((res = send(_sockTCP, msg + ttlsent, bytesleft, 0)) < 0 ) {
+            perror("TCP write error");
+            return res;
+        }
+        ttlsent += res;
+        bytesleft -= res;
+    }
+    return 0;
 }
 
 /*------------------------------------------------------------------------------
@@ -147,12 +147,12 @@ This read method reads the amount specified by the param len from the TCP
 socket stored as a private member of the Client object.
 --------------------------------------------------------------------------*/
 int NetworkManager::readTCPSocket(char *buf, int len) {
-	int res = 0;
-	if ( (res = read(_sockTCP, buf, len) ) < 0 ) {
-		perror("read");
-		return res;
-	}
-	return res;
+    int res = 0;
+    if ( (res = read(_sockTCP, buf, len) ) < 0 ) {
+        perror("read");
+        return res;
+    }
+    return res;
 }
 
 /*--------------------------------------------------------------------------
@@ -177,49 +177,49 @@ int NetworkManager::readTCPSocket(char *buf, int len) {
 -- This is afunction that connects the user with via TCP
 --------------------------------------------------------------------------*/
 int NetworkManager::TCPConnect(const char * ip_addr) {
-	if (ip_addr == NULL || inet_addr(ip_addr) == 0 ) {
-		std::cerr << "Missing or Incorrect IP addr."
-        		  << "\n IP Address must be in the form x.x.x.x"
-        		  << std::endl;
-		return -1;
-	}
+    if (ip_addr == NULL || inet_addr(ip_addr) == 0 ) {
+        std::cerr << "Missing or Incorrect IP addr."
+        << "\n IP Address must be in the form x.x.x.x"
+        << std::endl;
+        return -1;
+    }
 
-	struct sockaddr_in serv_addr;
-	//set server addr struct
-	memset(&serv_addr, '0', sizeof(struct sockaddr_in));
-	serv_addr.sin_family = AF_INET;
-	serv_addr.sin_port = htons(TCP_PORT);
-	serv_addr.sin_addr.s_addr = inet_addr(ip_addr);
+    struct sockaddr_in serv_addr;
+    //set server addr struct
+    memset(&serv_addr, '0', sizeof(struct sockaddr_in));
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_port = htons(TCP_PORT);
+    serv_addr.sin_addr.s_addr = inet_addr(ip_addr);
 
-	if ((_sockTCP = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-		std::cerr << "Error opening socket" << std::endl;
-		exit(1);
-	}
+    if ((_sockTCP = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+        std::cerr << "Error opening socket" << std::endl;
+        exit(1);
+    }
 
-	if((connect(_sockTCP, (struct sockaddr *)&serv_addr,
-        sizeof(struct sockaddr_in))) < 0) {
-		perror("Error Connecting");
-		exit(1);
-	}
+    if((connect(_sockTCP, (struct sockaddr *)&serv_addr,
+    sizeof(struct sockaddr_in))) < 0) {
+        perror("Error Connecting");
+        exit(1);
+    }
 
-	return 0;
+    return 0;
 }
 
- //Ey:- Mar 13 17- inserts a player in a map of all players of the game
+//Ey:- Mar 13 17- inserts a player in a map of all players of the game
 void NetworkManager::insertplayer(int32_t id, const char * username)
 {
     string stdStrUsername(username);
     insertplayer(id,stdStrUsername);
 }
 
- //Ey:- Mar 13 17- inserts a player in a map of all players of the game
- //* Overlaoded function
+//Ey:- Mar 13 17- inserts a player in a map of all players of the game
+//* Overlaoded function
 void NetworkManager::insertplayer(int32_t id, string & username)
 {
     _players.insert( std::pair<int,string>(id,username) );
 }
 
- //Ey:- Mar 13 17- retrieves the user name given a
+//Ey:- Mar 13 17- retrieves the user name given a
 const std::string & NetworkManager::getNameFromId(int32_t id)
 {
     return (_players.find(id)->second);
