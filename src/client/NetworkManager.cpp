@@ -311,8 +311,13 @@ struct sockaddr_in NetworkManager::createAddress(const in_addr_t ip, const int p
 
 int NetworkManager::createSocket(int sockType) const {
     int sock = socket(AF_INET, sockType, 0);
+    int arg = 1;
     if(sock < 0) {
         perror("sock");
+        exit(1);
+    }
+    if(setsockopt (sock, SOL_SOCKET, SO_REUSEADDR, &arg, sizeof(arg)) < 0) {
+        perror("setsockopt");
         exit(1);
     }
     return sock;
