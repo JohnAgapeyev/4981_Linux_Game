@@ -50,77 +50,13 @@ int main (int argc, char * argv[])
         exit(1);
     }
 
-    // start program!
-    fd_set readSet, initSet;
     NetworkManager netMan = NetworkManager::instance();
     UDPSocket udpsock;
-    char buffrecv[BUFFSIZE], buffsend[BUFFSIZE], *precvBuff;
-    thread udpRecvThread;
-    int32_t playerid, bRead;
-    int tcpsock;
 
-    netMan.handshake(argv[1], argv[2]);
-    tcpsock = netMan.getSockTCP();
-    connected = true;
+    // start Networkmanager!
+    netMan.run(argv[1], argv[2]);
     udpsock = netMan.getSockUDP();
 
-    bRead = netMan.readTCPSocket(buffrecv, BUFFSIZE);
-    { // semantically separated to signify parseControlMsg
-        myid = *(reinterpret_cast<const int32_t *>(buffrecv));
-        buffrecv[bRead] = '\0';
-        precvBuff = buffrecv + 6;
-    }
-    netMan.insertplayer(myid,precvBuff);
-    // start UDP thread
-    udpRecvThread = thread([&]{recvUDP(udpsock);});
-
-    FD_ZERO(&initSet);
-    FD_SET(STDIN, &initSet);
-    FD_SET(tcpsock, &initSet);
-
-    do {
-        readSet = initSet;
-
-        if(select(tcpsock + 1, &readSet, NULL, NULL, NULL) < 0) {
-            perror("select");
-            exit(1);
-        }
-
-        if(FD_ISSET(STDIN, &readSet)) {
-            int bytesToSend;
-            string str;
-            getline(cin, str);
-            bytesToSend = Packetizer::packControlMsg(buffsend, STD_BUFFSIZE, str.c_str(), myid);
-            netMan.writeTCPSocket(buffsend, bytesToSend);
-        }
-
-        if(FD_ISSET(tcpsock, &readSet)) {
-            if ((bRead = netMan.readTCPSocket(buffrecv, BUFFSIZE)) == 0 ) {
-                perror("Connection Closed");
-                connected = false;
-                break;
-            }
-
-            if(!running){
-                { // semantically separated to signify parseControlMsg
-                    playerid = *(reinterpret_cast<const int32_t *>(buffrecv));
-                    buffrecv[bRead] = '\0';
-                    precvBuff = buffrecv + 6;
-                }
-                netMan.insertplayer(myid,precvBuff);
-            }else{ // if game is going, must be player message
-                { // semantically separated to signify parseControlMsg
-                    playerid = *(reinterpret_cast<const int32_t *>(buffrecv));
-                    buffrecv[bRead] = '\0';
-                    precvBuff = buffrecv + 6;
-                }
-                cout << "Msg From " << netMan.getNameFromId(playerid)
-                     << ": " << precvBuff << endl;
-            }
-        }
-
-    } while(connected);
-    udpRecvThread.join();
 }
 
 void sigHandler(int sig)
