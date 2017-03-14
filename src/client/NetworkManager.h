@@ -1,7 +1,6 @@
 #ifndef NETWORKMANAGER_HPP
 #define NETWORKMANAGER_HPP
 
-#include "UDPSocket.h"
 #include <string>
 #include <stdio.h>
 #include <iostream>
@@ -13,48 +12,50 @@
 #include <memory>
 #include <map>
 
-#define TCP_PORT        35223
-#define UDP_PORT        35222
-#define UNAME_SIZE      32
+#define STDIN           0
+#define TCP_PORT 		35223
+#define UDP_PORT 		35222
+#define UNAME_SIZE 	    32
 #define PLAYERPACK_SIZE (UNAME_SIZE + 1)
-#define CHAT_BUFFSIZE   128
+#define CHAT_BUFFSIZE 	128
 #define STD_BUFFSIZE    1024
-#define MAX_EVENTS      1
-#define MAX_USERS       23
+#define MAX_EVENTS 		1
+#define MAX_USERS		23
 #define SYNC_PACKET_MAX USHRT_MAX
 #define SYNC_PACKET
 
+
 //moved enums to the bottom, and commented out
+
 class NetworkManager {
 public:
     static NetworkManager& instance();
-    void run(const char * ip, const char * uname);
-    UDPSocket& getSockUDP() {return _sockUDP;};
-    // EY -Mar 12 : added
-    int getSockTCP(){return _sockTCP;};
+    void run(const char *ip, const char  * username);
+    void initClients(const char *ip);
     void closeConnection();
-
+    int writeSocket(int, const char *, int);
+    void writeUDPSocket(const char *, int);
 private:
-    bool _connected, _running;
-    int _sockTCP;
-    int32_t _myid;
-    UDPSocket _sockUDP;
-    std::map<int, std::string> _players; // maps id to user name
+    int32_t _myid;  // EY: March 14 - to be removed for game intergration
+    bool connected, running; // EY: March 14 - to be removed for game intergration
+    int sockTCP;
+    int sockUDP;
+    in_addr_t serverIP;
     NetworkManager() {};
 
+    void runTCPClient();
+    void runUDPClient();
+
+    int createSocket(int) const;
+    int connectSocket(const char *) const;
+    void connectSocket(int sock, const struct sockaddr_in& addr) const;
+    void bindSocket(int sock, struct sockaddr_in addr);
     void handshake(const char * ip, const char * uname);
     void waitRecvId();
 
-    int writeTCPSocket(const char *, int);
-    int readTCPSocket(char *, int);
+    struct sockaddr_in createAddress(const in_addr_t ip, const int port) const;
+    int readSocket(int sock, char *buf, int len) const;
 
-    // EY: Mar 12: added for player id-username mapping
-    void insertplayer(int32_t id, const char * username);
-    void insertplayer(int32_t id, std::string & username);
-    const std::string & getNameFromId(int32_t id);
-
-    void runUDPClient(std::shared_ptr<UDPSocket> udpSock);
-    int TCPConnect(const char *);
 };
 
 #endif
@@ -65,9 +66,9 @@ private:
 #define PACKET_SPECIFIER_ENUMCL
 
 enum class P_SPECIFIER{
-EXIT,
-UNAME,
-CHAT
+	  EXIT,
+		UNAME,
+		CHAT
 };
 
 #endif
@@ -76,8 +77,8 @@ CHAT
 #define GAMESTATE_ENUMCL
 
 enum class GAMESTATE{
-GAME_RECV,
-AI_RECV
+		GAME_RECV,
+		AI_RECV
 };
 #endif
 */
