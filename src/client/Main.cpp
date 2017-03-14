@@ -28,9 +28,7 @@ int32_t myid;
 
 void sigHandler(int sig);
 int inline getRandTime();
-void sendAction(UDPSocket &sock);
-void sendMove(UDPSocket &sock);
-void recvUDP(UDPSocket &sock);
+
 
 using namespace std;
 
@@ -51,11 +49,9 @@ int main (int argc, char * argv[])
     }
 
     NetworkManager netMan = NetworkManager::instance();
-    UDPSocket udpsock;
-
     // start Networkmanager!
     netMan.run(argv[1], argv[2]);
-    udpsock = netMan.getSockUDP();
+
 
 }
 
@@ -67,78 +63,6 @@ void sigHandler(int sig)
         running = false;
     }
     raise(SIGKILL);
-}
-
-
-void recvUDP(UDPSocket &sock)
-{
-    char buffrecv[BUFFSIZE];
-    int bRead;
-    thread tSendActions, tSendMoves;
-    //first udp call will block until i recv something
-    bRead = sock.recvFromServ(buffrecv, BUFFSIZE);
-    cout << "\nRecevied Dgram. Bytes read: " << bRead;
-
-    running = true;
-    tSendActions = thread([&]{sendAction(sock);}); //thread to send actions
-    tSendMoves = thread([&]{sendMove(sock);}); //thread to send moves
-    while (running)
-    {
-      // read a game sync and print the size read
-      bRead = sock.recvFromServ(buffrecv, BUFFSIZE);
-      cout << "\nRecevied Dgram. Bytes read: " << bRead;
-    }
-    tSendActions.join();
-    tSendMoves.join();
-    cout << endl;
-}
-
-// mimc player action
-void sendAction(UDPSocket &sock)
-{
-  AttackAction action;
-  int     iCounter = 1;
-  double  dCounter = 1.1;
-
-  action.actionid = 0;
-  action.weaponid = 0;
-  while(running)
-  {
-
-    action.id = iCounter++;
-    action.xpos = dCounter;
-    action.ypos = dCounter;
-    action.direction = dCounter;
-    dCounter += 1.1;
-
-    //unique_lock<mutex> lock(mtx);
-    sock.sendToServ(reinterpret_cast<char *>(&action), sizeof(action));
-    //unique_lock<mutex> unlock(mtx);
-
-    //mimc random actions taken with random sleep
-    this_thread::sleep_for(chrono::milliseconds(getRandTime()));
-  }
-}
-
-// mimc player movement
-void sendMove(UDPSocket &sock)
-{
-  MoveAction action;
-  double  dCounter = 1.1;
-  int iCounter = 1;
-  while(running)
-  {
-    action.id = iCounter++;
-    action.xpos = dCounter;
-    action.ypos = dCounter;
-    action.direction = dCounter;
-    dCounter += 1.1;
-
-    sock.sendToServ(reinterpret_cast<char *>(&action), sizeof(action));
-
-    //mimc random actions taken with random sleep
-    this_thread::sleep_for(chrono::milliseconds(getRandTime()));
-  }
 }
 
 // mimc player movement
