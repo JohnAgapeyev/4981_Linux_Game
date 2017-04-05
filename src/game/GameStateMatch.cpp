@@ -81,6 +81,7 @@ void GameStateMatch::loop() {
         //If frame rate changes, this may need limiting
         sendSyncPacket(sendSocketUDP);
         clearAttackActions();
+        clearDrops();
 #endif
 
         //If frame finished early
