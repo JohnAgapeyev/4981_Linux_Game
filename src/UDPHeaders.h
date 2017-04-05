@@ -353,6 +353,9 @@ typedef struct
     int32_t deleteheaderid = static_cast<int32_t>(UDPHeaders::DELETE);
     int32_t ndeletes;
     DeleteAction *deletions;
+    int32_t weapondropheaderid = static_cast<int32_t>(UDPHeaders::WEAPONDROP);
+    int32_t ndrops;
+    WeaponDropAction *drops;
 } GameSync;
 
 /*------------------------------------------------------------------------------
@@ -382,6 +385,7 @@ union PacketData {
     TurretAction ta;
     BarricadeAction ba;
     DeleteAction da;
+    WeaponDropAction wda;
 };
 
 /*------------------------------------------------------------------------------
