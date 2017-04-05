@@ -179,6 +179,11 @@ void processPacket(const char *data) {
                 const DeleteAction& da = mesg->data.da;
                 deleteEntity(da);
             }
+        case UDPHeaders::WEAPONDROPREQUEST:
+            {
+                const WeaponDropAction& wda = mesg->data.wda;
+                handleDropRequest(wda);
+            }
         default:
             logv("Received packet with unknown id\n");
             break;
@@ -242,6 +247,16 @@ std::string genOutputPacket() {
         memcpy(pDelete++, &d, sizeof(DeleteAction));
     }
     pBuff = reinterpret_cast<int32_t *>(pDelete);
+
+    *pBuff++ = static_cast<int32_t>(UDPHeaders::WEAPONDROPREQUEST);
+
+    const auto& drops = getDrops();
+    *pBuff++ = drops.size();
+    WeaponDropAction *pDrop = reinterpret_cast<WeaponDropAction *>(pBuff);
+    for(const auto& wda : drops) {
+        memcpy(pDrop++, &wda, sizeof(WeaponDropAction));
+    }
+    pBuff = reinterpret_cast<int32_t *>(pDrop);
 
     //calculate how full the packet is for when its sent
     const size_t outputLength = (pBuff - reinterpret_cast<int32_t *>(outputPacket)) * sizeof(int32_t);

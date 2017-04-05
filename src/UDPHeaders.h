@@ -56,6 +56,11 @@ enum class UDPHeaders : int32_t {
     SHOPPURCHASEH, // shop purchase
     BARRICADEACTIONH, // action on barricade
     TURRETACTIONH, // action on turret
+    WEAPONDROPREQUEST, //Request for weapon drop
+    //Weapon headers
+    PISTOL,
+    RIFLE,
+    SHOTGUN,
 
     DELETE, //Delete action
     MARINE, //Used for deletion
@@ -73,9 +78,6 @@ enum class UDPHeaders : int32_t {
     //attack Headers
     SHOOT,
     HIT,
-    //weapon headers
-    DEAGLEH,
-    RIFLEH,
     //shop item headers
     HEALTHPACKH,
     AMMO,
@@ -314,6 +316,14 @@ typedef struct {
     int32_t entityid;
 }  __attribute__((packed, aligned(1))) DeleteAction;
 
+//x, y, id, type
+typedef struct {
+    float xpos;
+    float ypos;
+    UDPHeaders weapontype;
+    int32_t weaponid;
+}  __attribute__((packed, aligned(1))) WeaponDropAction;
+
 /*------------------------------------------------------------------------------
 * Struct: GameSync
 *
@@ -351,6 +361,9 @@ typedef struct
     int32_t deleteheaderid = static_cast<int32_t>(UDPHeaders::DELETE);
     int32_t ndeletes;
     DeleteAction *deletions;
+    int32_t weapondropheaderid = static_cast<int32_t>(UDPHeaders::WEAPONDROPREQUEST);
+    int32_t ndrops;
+    WeaponDropAction *drops;
 } GameSync;
 
 /*------------------------------------------------------------------------------
@@ -380,7 +393,7 @@ union PacketData {
     TurretAction ta;
     BarricadeAction ba;
     DeleteAction da;
-    PickUpAction pa;
+    WeaponDropAction wda;
 };
 
 /*------------------------------------------------------------------------------

@@ -39,6 +39,10 @@ public:
     void sendServMoveAction();
     void sendServAttackAction();
     void sendServPickUpAction(int32_t weaponId);
+    void sendServDeleteAction(int32_t weaponid);
+    void sendServWeaponPurchaseAction();
+    void sendServWeaponDropAction(int32_t weaponId, UDPHeaders weaponType);
+
     bool hasChangedAngle() const;
     bool hasChangedCourse() const;
     void setId(const int32_t newId) {id = newId;};
@@ -56,6 +60,8 @@ private:
     int32_t id;
     ClientMessage moveAction;
     ClientMessage attackAction;
+    ClientMessage deleteAction;
+    ClientMessage weaponDropAction;
     Marine *marine;
 };
 

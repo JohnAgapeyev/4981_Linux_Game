@@ -8,6 +8,8 @@ Player::Player() : tempBarricadeID(-1), tempTurretID(-1), holdingTurret(false), 
         marine(nullptr) {
     moveAction.id = static_cast<int32_t>(UDPHeaders::WALK);
     attackAction.id = static_cast<int32_t>(UDPHeaders::ATTACKACTIONH);
+    deleteAction.id = static_cast<int32_t>(UDPHeaders::WEAPONDROP);
+    weaponDropAction.id = static_cast<int32_t>(UDPHeaders::WEAPONDROPREQUEST);
 }
 
 void Player::setControl(Marine* newControl) {
@@ -31,7 +33,7 @@ void Player::sendServMoveAction() {
     moveAction.data.ma.ydel = marine->getDY();
     moveAction.data.ma.vel = marine->getVelocity();
     moveAction.data.ma.direction = marine->getAngle();
-    NetworkManager::instance().writeUDPSocket((char *)&moveAction, sizeof(ClientMessage));
+    NetworkManager::instance().writeUDPSocket(reinterpret_cast<char *>(&moveAction), sizeof(ClientMessage));
 }
 
 void Player::sendServAttackAction() {
@@ -42,18 +44,30 @@ void Player::sendServAttackAction() {
     attackAction.data.aa.ypos = marine->getY();
     attackAction.data.aa.direction = marine->getAngle();
 
-    NetworkManager::instance().writeUDPSocket((char *)&attackAction, sizeof(ClientMessage));
+    NetworkManager::instance().writeUDPSocket(reinterpret_cast<char *>(&attackAction), sizeof(ClientMessage));
 }
 
-/*
-void sendServPickUpAction(int32_t weaponId) {
-    typedef struct {
-        UDPHeaders entitytype;
-        int32_t entityid;
-    }  __attribute__((packed, aligned(1))) DeleteAction;
-    deleteAction.
+
+void Player::sendServDeleteAction(int32_t weaponId) {
+    deleteAction.data.da.entityid = weaponId;
+    NetworkManager::instance().writeUDPSocket(reinterpret_cast<char *>(&deleteAction), sizeof(ClientMessage));
 }
-*/
+
+void Player::sendServWeaponPurchaseAction() {
+    weaponDropAction.data.wda.xpos = marine->getX();
+    weaponDropAction.data.wda.ypos = marine->getY();
+    weaponDropAction.data.wda.weaponid = -1;
+    NetworkManager::instance().writeUDPSocket(reinterpret_cast<char *>(&weaponDropAction), sizeof(ClientMessage));
+}
+
+void Player::sendServWeaponDropAction(int32_t weaponId, UDPHeaders weaponType) {
+    weaponDropAction.data.wda.xpos = marine->getX();
+    weaponDropAction.data.wda.ypos = marine->getY();
+    weaponDropAction.data.wda.weapontype = weaponType;
+    weaponDropAction.data.wda.weaponid = weaponId;
+    NetworkManager::instance().writeUDPSocket(reinterpret_cast<char *>(&weaponDropAction), sizeof(ClientMessage));
+}
+
 void Player::handleMouseUpdate(const int winWidth, const int winHeight, const float camX, const float camY) {
     int mouseX;
     int mouseY;

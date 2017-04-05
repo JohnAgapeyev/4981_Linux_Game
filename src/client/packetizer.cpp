@@ -149,6 +149,7 @@ void parseGameSync(const void *syncBuff, size_t bytesReads) {
     PlayerData *player;
     AttackAction *attack;
     ZombieData *zombie;
+    WeaponDropAction *weaponDrop;
     DeleteAction *deletion;
 
     while (pBuff <= pEnd) {
@@ -160,18 +161,25 @@ void parseGameSync(const void *syncBuff, size_t bytesReads) {
                     pBuff = reinterpret_cast<int32_t *>(++player);
                 }
                 break;
-            case UDPHeaders::ATTACKACTIONH: 
+            case UDPHeaders::ATTACKACTIONH:
                 for (int32_t i = 0, aCount = *pBuff++; i < aCount; ++i) {
                     attack = reinterpret_cast<AttackAction *>(pBuff);
                     GameManager::instance()->handleAttackAction(*attack);
                     pBuff = reinterpret_cast<int32_t *>(++attack);
                 }
                 break;
-            case UDPHeaders::ZOMBIEH: 
+            case UDPHeaders::ZOMBIEH:
                 for (int32_t i = 0, zCount = *pBuff++; i < zCount; ++i){
                     zombie = reinterpret_cast<ZombieData *>(pBuff);
                     GameManager::instance()->updateZombie(*zombie);
                     pBuff = reinterpret_cast<int32_t *>(++zombie);
+                }
+                break;
+            case UDPHeaders::WEAPONDROPREQUEST:
+                for (int32_t i = 0, wCount = *pBuff++; i < wCount; ++i){
+                    weaponDrop = reinterpret_cast<WeaponDropAction *>(pBuff);
+                    GameManager::instance()->handleWeaponDrop(*weaponDrop);
+                    pBuff = reinterpret_cast<int32_t *>(++weaponDrop);
                 }
                 break;
             case UDPHeaders::DELETE:

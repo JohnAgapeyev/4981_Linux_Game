@@ -66,12 +66,15 @@ int32_t Marine::checkForPickUp() {
             pickId = wd.getWeaponId();
             //Picks up Weapon
             if(inventory.pickUp(pickId, wd.getX(), wd.getY())) {
-                //GameManager::instance()->getPlayer().sendServPickUpAction(pickId);
-                int32_t DropPoint = wd.getDropPoint();
-                if(DropPoint != -1){
-                    gm->freeDropPoint(DropPoint);
+                if (networked) {
+                    GameManager::instance()->getPlayer().sendServDeleteAction(pickId);
+                } else {
+                    int32_t DropPoint = wd.getDropPoint();
+                    if(DropPoint != -1){
+                        gm->freeDropPoint(DropPoint);
+                    }
+                    gm->deleteWeaponDrop(wd.getId());
                 }
-                gm->deleteWeaponDrop(wd.getId());
             }
         } else {
             logv("unable to find id:%d in weaponDropManager\n", pickId);
@@ -186,8 +189,11 @@ void Marine::updateImageWalk(const Uint8 *state) {
 void Marine::activateStore(const Entity *ep){
     GameManager *gm = GameManager::instance();
     if(gm->storeExists(ep->getId())){
-        int r = rand()% 2 + 1;//random number temp for testing
-
-        gm->getStore(ep->getId())->purchase(r);
+        if (networked) {
+            GameManager::instance()->getPlayer().sendServWeaponPurchaseAction();
+        } else {
+            int r = rand()% 2 + 1;//random number temp for testing
+            gm->getStore(ep->getId())->purchase(r);
+        }
     }
 }

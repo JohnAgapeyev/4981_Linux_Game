@@ -112,14 +112,25 @@ void Inventory::scrollCurrent(int direction) {
      if(current){
          Weapon *w = getCurrent();
          if (w) {
-             if (w->getAmmo() > 0) {
-                 GameManager::instance()->createWeaponDrop(x,y, weaponIds[current]);
-
+             if (networked) {
+                 const std::string& weaponType = w->getType();
+                 if (weaponType.compare("Rifle")) {
+                     GameManager::instance()->getPlayer().sendServWeaponDropAction(weaponIds[current], UDPHeaders::RIFLE);
+                 } else if(weaponType.compare("Shotgun")) {
+                     GameManager::instance()->getPlayer().sendServWeaponDropAction(weaponIds[current], UDPHeaders::SHOTGUN);
+                 } else if(weaponType.compare("Handgun")) {
+                     GameManager::instance()->getPlayer().sendServWeaponDropAction(weaponIds[current], UDPHeaders::PISTOL);
+                 }
              } else {
-                 //delete weapon From Weapon Manager
-                 GameManager::instance()->removeWeapon(weaponIds[current]);
-             }
-             weaponIds[current] = -1;
+                 if (w->getAmmo() > 0) {
+                     GameManager::instance()->createWeaponDrop(x,y, weaponIds[current]);
+
+                 } else {
+                     //delete weapon From Weapon Manager
+                     GameManager::instance()->removeWeapon(weaponIds[current]);
+                 }
+                 weaponIds[current] = -1;
+            }
          }
      }
  }

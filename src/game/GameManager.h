@@ -118,7 +118,7 @@ public:
     void updateMarine(const PlayerData &playerData);
     void updateZombie(const ZombieData &zombieData);
     void handleAttackAction(const AttackAction& attackAction);
-
+    void handleWeaponDrop(const WeaponDropAction& weaponDropAction);
     void setPlayerUsername(int32_t id, const char * username);
     const std::string& getNameFromId(int32_t id);
 

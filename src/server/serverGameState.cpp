@@ -6,11 +6,15 @@
 #include "../player/Marine.h"
 #include "../creeps/Zombie.h"
 #include "../game/GameManager.h"
+#include "../inventory/weapons/HandGun.h"
+#include "../inventory/weapons/Rifle.h"
+#include "../inventory/weapons/ShotGun.h"
 #include "servergamestate.h"
 
 GameManager *gm = GameManager::GameManager::instance();
 std::vector<AttackAction> attackList;
 std::vector<DeleteAction> deleteList;
+std::vector<WeaponDropAction> dropList;
 
 /**
  * Saves a attack action in the vector.
@@ -31,6 +35,10 @@ void clearAttackActions() {
 
 void clearDeleteActions() {
     deleteList.clear();
+}
+
+void clearWeaponDrops() {
+    dropList.clear();
 }
 
 /**
@@ -105,6 +113,29 @@ void processTurret(const TurretAction& ta) {
         tempTurret.setPosition(ta.xpos, ta.ypos);
     } else {
         logv("Received turret packet with unknown action id\n");
+    }
+}
+
+void handleDropRequest(const WeaponDropAction& wda) {
+    if (wda.weaponid == -1) {
+        //Create weapon
+        const int32_t id = gm->generateID();
+        switch(wda.weapontype) {
+            case UDPHeaders::PISTOL:
+                gm->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<HandGun>(id)));
+                break;
+            case UDPHeaders::RIFLE:
+                gm->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(id)));
+                break;
+            case UDPHeaders::SHOTGUN:
+                gm->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<ShotGun>(id)));
+                break;
+            default:
+                logv("Received weapon drop request with unknown type\n");
+                break;
+        }
+    } else {
+        //Player dropped an existing weapon
     }
 }
 
@@ -193,6 +224,14 @@ void deleteEntity(const DeleteAction& da) {
 
 void saveDeletion(const DeleteAction& da) {
     deleteList.push_back(da);
+}
+
+void saveDrop(const WeaponDropAction& wda) {
+    dropList.push_back(wda);
+}
+
+std::vector<WeaponDropAction> getDrops() {
+    return dropList;
 }
 
 /**

@@ -649,6 +649,17 @@ void GameManager::handleAttackAction(const AttackAction& attackAction) {
     }
 }
 
+void GameManager::handleWeaponDrop(const WeaponDropAction& weaponDropAction) {
+    if (weaponDropAction.weapontype == UDPHeaders::RIFLE) {
+        addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(weaponDropAction.weaponid)));
+    } else if(weaponDropAction.weapontype == UDPHeaders::SHOTGUN) {
+        addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<ShotGun>(weaponDropAction.weaponid)));
+    } else if(weaponDropAction.weapontype == UDPHeaders::PISTOL) {
+        addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<HandGun>(weaponDropAction.weaponid)));
+    }
+    createWeaponDrop(weaponDropAction.xpos, weaponDropAction.ypos, weaponDropAction.weaponid);
+}
+
 /**
 * Date: Mar. 1, 2017
 * Modified: Mar. 15 2017 - Mark Tattrie
@@ -742,4 +753,3 @@ void GameManager::setBoundary(const float startX, const float startY, const floa
     createWall(eX, sY, width, height / 1.5);
     createWall(eX, sY + (height / 4 * 3), width, height / 4);
 }
-
