@@ -308,6 +308,14 @@ typedef struct {
     int32_t entityid;
 }  __attribute__((packed, aligned(1))) DeleteAction;
 
+//x, y, id, type
+typedef struct {
+    float xpos;
+    float ypos;
+    UDPHeaders weapontype;
+    int32_t weaponid;
+}  __attribute__((packed, aligned(1))) WeaponDropAction;
+
 /*------------------------------------------------------------------------------
 * Struct: GameSync
 *
