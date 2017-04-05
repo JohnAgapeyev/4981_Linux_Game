@@ -145,11 +145,8 @@ void GameManager::updateMarines(const float delta) {
 // Update zombie movements.
 void GameManager::updateZombies(const float delta) {
     for (auto& z : zombieManager) {
-        if (networked) {
-            z.second.updateZombieWalk(z.second.getAngle());
-        } else {
-            z.second.generateMove();
-        }
+        z.second.generateMove();
+        
         if (z.second.isMoving()) {
             z.second.move((z.second.getDX() * delta), (z.second.getDY() * delta), collisionHandler);
         }
