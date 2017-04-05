@@ -226,6 +226,12 @@ typedef struct {
     float direction;
 } __attribute__((packed, aligned(1))) MoveAction;
 
+typedef struct {
+    int32_t id;
+    int32_t weaponid;
+} __attribute__((packed, aligned(1))) PickUpAction;
+
+
 /*------------------------------------------------------------------------------
 * Struct: PlayerData
 *
@@ -374,6 +380,7 @@ union PacketData {
     TurretAction ta;
     BarricadeAction ba;
     DeleteAction da;
+    PickUpAction pa;
 };
 
 /*------------------------------------------------------------------------------
