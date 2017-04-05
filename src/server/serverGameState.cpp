@@ -119,23 +119,35 @@ void processTurret(const TurretAction& ta) {
 void handleDropRequest(const WeaponDropAction& wda) {
     if (wda.weaponid == -1) {
         //Create weapon
-        const int32_t id = gm->generateID();
         switch(wda.weapontype) {
             case UDPHeaders::PISTOL:
-                gm->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<HandGun>(id)));
-                break;
+                {
+                    const int32_t id = gm->generateID();
+                    gm->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<HandGun>(id)));
+                    gm->createWeaponDrop(wda.xpos, wda.ypos, id);
+                    break;
+                }
             case UDPHeaders::RIFLE:
-                gm->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(id)));
-                break;
+                {
+                    const int32_t id = gm->generateID();
+                    gm->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(id)));
+                    gm->createWeaponDrop(wda.xpos, wda.ypos, id);
+                    break;
+                }
             case UDPHeaders::SHOTGUN:
-                gm->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<ShotGun>(id)));
-                break;
+                {
+                    const int32_t id = gm->generateID();
+                    gm->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<ShotGun>(id)));
+                    gm->createWeaponDrop(wda.xpos, wda.ypos, id);
+                    break;
+                }
             default:
                 logv("Received weapon drop request with unknown type\n");
                 break;
         }
     } else {
         //Player dropped an existing weapon
+        gm->createWeaponDrop(wda.xpos, wda.ypos, wda.weaponid);
     }
 }
 
