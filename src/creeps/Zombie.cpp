@@ -169,9 +169,6 @@ void Zombie::generateMove() {
         case ZombieDirection::DIR_INVALID:  // Shouldn't ever happens, gets rid of warning
             break;
     }
-
-    updateZombieWalk(directionVal);
-
     zAttack();
     // Frames are used to make sure the zombie doesn't move through the path too quickly/slowly
     if (frame > 0) {
