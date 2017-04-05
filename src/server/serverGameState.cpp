@@ -11,6 +11,7 @@
 GameManager *gm = GameManager::GameManager::instance();
 std::vector<AttackAction> attackList;
 std::vector<DeleteAction> deleteList;
+std::vector<WeaponDropAction> dropList;
 
 /**
  * Saves a attack action in the vector.
@@ -31,6 +32,10 @@ void clearAttackActions() {
 
 void clearDeleteActions() {
     deleteList.clear();
+}
+
+void clearWeaponDrops() {
+    dropList.clear();
 }
 
 /**
@@ -106,6 +111,10 @@ void processTurret(const TurretAction& ta) {
     } else {
         logv("Received turret packet with unknown action id\n");
     }
+}
+
+void handleDropRequest(const WeaponDropAction& wda) {
+
 }
 
 /**
@@ -193,6 +202,14 @@ void deleteEntity(const DeleteAction& da) {
 
 void saveDeletion(const DeleteAction& da) {
     deleteList.push_back(da);
+}
+
+void saveDrop(const WeaponDropAction& wda) {
+    dropList.push_back(wda);
+}
+
+std::vector<WeaponDropAction> getDrops() {
+    return dropList;
 }
 
 /**

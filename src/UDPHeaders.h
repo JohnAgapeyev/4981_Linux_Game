@@ -56,6 +56,7 @@ enum class UDPHeaders : int32_t {
     SHOPPURCHASEH, // shop purchase
     BARRICADEACTIONH, // action on barricade
     TURRETACTIONH, // action on turret
+    WEAPONDROPREQUEST, //Request for weapon drop
 
     DELETE, //Delete action
     MARINE, //Used for deletion
@@ -353,7 +354,7 @@ typedef struct
     int32_t deleteheaderid = static_cast<int32_t>(UDPHeaders::DELETE);
     int32_t ndeletes;
     DeleteAction *deletions;
-    int32_t weapondropheaderid = static_cast<int32_t>(UDPHeaders::WEAPONDROP);
+    int32_t weapondropheaderid = static_cast<int32_t>(UDPHeaders::WEAPONDROPREQUEST);
     int32_t ndrops;
     WeaponDropAction *drops;
 } GameSync;
