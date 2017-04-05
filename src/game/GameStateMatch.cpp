@@ -35,7 +35,7 @@ bool GameStateMatch::load() {
         GameManager::instance()->addObject(base);
         Point newPoint = base.getSpawnPoint();
         base.setSrcRect(BASE_SRC_X, BASE_SRC_Y, BASE_SRC_W, BASE_SRC_H);
-      
+
         GameManager::instance()->getPlayer().setControl(
                 &GameManager::instance()->getMarine(GameManager::instance()->createMarine()).first);
         GameManager::instance()->getPlayer().getMarine()->setPosition(newPoint.first, newPoint.second);
@@ -146,7 +146,7 @@ void GameStateMatch::handle() {
     // Handle movement input if the player has a marine
     if(GameManager::instance()->getPlayer().getMarine()){
         GameManager::instance()->getPlayer().handleKeyboardInput(state);
-        GameManager::instance()->getPlayer().handleMouseUpdate(game.getWindow().getWidth(), 
+        GameManager::instance()->getPlayer().handleMouseUpdate(game.getWindow().getWidth(),
                 game.getWindow().getHeight(), camera.getX(), camera.getY());
         GameManager::instance()->getPlayer().getMarine()->updateImageDirection(); //Update direction of player
         GameManager::instance()->getPlayer().getMarine()->updateImageWalk(state);  //Update walking animation
@@ -234,7 +234,10 @@ void GameStateMatch::update(const float delta) {
     GameManager::instance()->updateZombies(delta);
     GameManager::instance()->updateTurrets();
     GameManager::instance()->getPlayer().checkMarineState();
-    matchManager.checkMatchState();
+
+    if (!networked) {
+        matchManager.checkMatchState();
+    }
 
 #ifndef SERVER
     // Move Camera
