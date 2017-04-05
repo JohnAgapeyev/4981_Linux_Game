@@ -57,6 +57,10 @@ enum class UDPHeaders : int32_t {
     BARRICADEACTIONH, // action on barricade
     TURRETACTIONH, // action on turret
     WEAPONDROPREQUEST, //Request for weapon drop
+    //Weapon headers
+    PISTOL,
+    RIFLE,
+    SHOTGUN,
 
     DELETE, //Delete action
     MARINE, //Used for deletion
@@ -74,9 +78,6 @@ enum class UDPHeaders : int32_t {
     //attack Headers
     SHOOT,
     HIT,
-    //weapon headers
-    DEAGLEH,
-    RIFLEH,
     //shop item headers
     HEALTHPACKH,
     AMMO,
