@@ -9,7 +9,7 @@
  * Author: Jacob McPhail
  * Function Interface: Marine(const int32_t id, const SDL_Rect& dest,
  *              const SDL_Rect& movementSize, const SDL_Rect& projectileSize, const SDL_Rect& damageSize)
- *              
+ *
  *              id : Marine id
  *              dest : Destination rect
  *              movmentSize : Move hitbox size
@@ -32,7 +32,7 @@ Marine::Marine(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementS
  * Author: Jacob McPhail
  * Function Interface: ~Marine()
  * Description:
- *   dctor for a marine.  
+ *   dctor for a marine.
  */
 Marine::~Marine() {
     logv("Destroy Marine\n");

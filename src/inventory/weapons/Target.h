@@ -31,8 +31,8 @@
         hitX and hitY are where the zombie was hit by the bullet.
 
         playerDist represents the distance to the gun muzzle from (hitx, hity).
-        
-        Objects of this type will primarily be sorted using the playerDist parameter. 
+
+        Objects of this type will primarily be sorted using the playerDist parameter.
         Hence the operator< has been adjusted to use playerDist.
 
     AUTHOR: Deric Mccadden 3/29/2017
@@ -40,7 +40,7 @@
 */
 class Target{
 public:
-    Target(int32_t id, int type, int hitX, int hitY, int playerDist) 
+    Target(int32_t id, int type, int hitX, int hitY, int playerDist)
     : id(id), type(type), hitX(hitX), hitY(hitY), playerDist(playerDist){}
 
     bool operator<(const Target& rhs) const {
@@ -71,7 +71,7 @@ private:
 
     PARAMATERS:
         originX and originY represent the muzzle of the gun.
-        
+
         endX and endY represent the point where the bullet will hit the ground if it hits nothing else.
 
     AUTHOR: Deric Mccadden 3/29/2017
@@ -94,7 +94,7 @@ public:
     int getEndY() const {return endY;}
     void setEndX(const int x) {endX = x;}
     void setEndY(const int y) {endY = y;}
-    
+
 private:
     std::priority_queue<Target> targets;
     int originX;
