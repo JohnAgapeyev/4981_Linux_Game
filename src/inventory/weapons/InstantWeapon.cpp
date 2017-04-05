@@ -60,15 +60,14 @@ InstantWeapon::InstantWeapon(string type, TEXTURES sprite, string fireSound, str
     AUTHOR: Deric Mccadden 01/03/17
 
 */
-bool InstantWeapon::fire(Movable& movable) {
-    if (!Weapon::fire(movable)) {
+bool InstantWeapon::fire(const float x, const float y, const double angle) {
+    if (!Weapon::fire(x, y, angle)) {
         return false;
     }
     logv(3, "InstantWeapon::fire()\n");
 
-    const int gunX = movable.getX() + (MARINE_WIDTH / 2);
-    const int gunY = movable.getY() + (MARINE_HEIGHT / 2);
-    const double angle = movable.getAngle();
+    const int gunX = x + (MARINE_WIDTH / 2);
+    const int gunY = y + (MARINE_HEIGHT / 2);
 
     fireSingleProjectile(gunX, gunY, angle);
 

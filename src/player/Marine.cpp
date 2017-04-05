@@ -26,7 +26,7 @@ void Marine::collidingProjectile(const int damage) {
 bool Marine::fireWeapon() {
     Weapon *w = inventory.getCurrent();
     if(w) {
-        return w->fire(*this);
+        return w->fire(getX(), getY(), getAngle());
     } else {
         logv("Slot Empty\n");
         return false;
@@ -66,6 +66,7 @@ int32_t Marine::checkForPickUp() {
             pickId = wd.getWeaponId();
             //Picks up Weapon
             if(inventory.pickUp(pickId, wd.getX(), wd.getY())) {
+                //GameManager::instance()->getPlayer().sendServPickUpAction(pickId);
                 int32_t DropPoint = wd.getDropPoint();
                 if(DropPoint != -1){
                     gm->freeDropPoint(DropPoint);
@@ -190,4 +191,3 @@ void Marine::activateStore(const Entity *ep){
         gm->getStore(ep->getId())->purchase(r);
     }
 }
-

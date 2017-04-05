@@ -46,7 +46,7 @@ public:
 
     int32_t getID() const {return wID;};
 
-    virtual bool fire(Movable& movable);
+    virtual bool fire(const float x, const float y, const double angle);
 
 protected:
 

@@ -1,20 +1,20 @@
 /*------------------------------------------------------------------------------
-* Source: Zombie.cpp    
+* Source: Zombie.cpp
 *
 * Functions:
-*    
 *
-* Date: 
 *
-* Revisions: 
+* Date:
+*
+* Revisions:
 * Edited By : Yiaoping Shu- Style guide
 *
-* Designer: 
+* Designer:
 *
-* Author: 
+* Author:
 *
 * Notes:
-*  
+*
 ------------------------------------------------------------------------------*/
 #include <math.h>
 #include <random>
@@ -309,7 +309,7 @@ string Zombie::generatePath(const float xStart, const float yStart,
 void Zombie::zAttack(){
     Weapon* w = inventory.getCurrent();
     if (w){
-        w->fire(*this);
+        w->fire(getX(), getY(), getAngle());
     } else {
         logv("Zombie Slot Empty\n");
     }

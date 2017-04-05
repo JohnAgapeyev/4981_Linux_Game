@@ -31,13 +31,14 @@ public:
 
     void handleTempBarricade(SDL_Renderer *renderer);
     void handleTempTurret(SDL_Renderer *renderer);
-    
+
     void checkMarineState();
 
     void fireWeapon();
 
     void sendServMoveAction();
     void sendServAttackAction();
+    void sendServPickUpAction(int32_t weaponId);
     bool hasChangedAngle() const;
     bool hasChangedCourse() const;
     void setId(const int32_t newId) {id = newId;};

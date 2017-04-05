@@ -44,7 +44,7 @@ public:
     ShotGun(const int32_t id);
     ~ShotGun() = default;
 
-    bool fire(Movable& movable);
+    bool fire(const float x, const float y, const double angle);
 };
 
 #endif

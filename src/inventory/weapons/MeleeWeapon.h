@@ -15,7 +15,7 @@ public:
             const int reloadDelay, const int fireDelay, int32_t id);
     ~MeleeWeapon() = default;
 
-    virtual bool fire(Movable &marine);
+    virtual bool fire(const float x, const float y, const double angle);
     //bool fire(Zombie &zombie);
 
 

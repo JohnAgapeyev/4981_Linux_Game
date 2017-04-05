@@ -39,16 +39,16 @@ MeleeWeapon::MeleeWeapon(const string& type, TEXTURES sprite, const string& fire
  * of it based on the range of the weapon. Then checks for collision between that hitbox and other
  * objects.
  */
-bool MeleeWeapon::fire(Movable &mov){
-    if (!Weapon::fire(mov)) {
+bool MeleeWeapon::fire(const float x, const float y, const double angle){
+    if (!Weapon::fire(x, y, angle)) {
         return false;
     }
 
-    const double degrees = mov.getAngle() - 90;
+    const double degrees = angle - 90;
     const double radians = degrees * M_PI / 180;
 
-    const int originX = mov.getX() + (Z_WIDTH / 2);
-    const int originY = mov.getY() + (Z_HEIGHT / 2);
+    const int originX = x + (Z_WIDTH / 2);
+    const int originY = y + (Z_HEIGHT / 2);
     const int deltaX  = range/2 * cos(radians);
     const int deltaY  = range/2 * sin(radians);
 
@@ -66,28 +66,26 @@ bool MeleeWeapon::fire(Movable &mov){
     CollisionHandler &ch = GameManager::instance()->getCollisionHandler();
 
     //vector of each marine the melee attack connects with
-    std::vector<Entity *> hitMarines = ch.detectMeleeCollision(ch.getQuadTreeEntities(ch.quadtreeMarine,
-            &mov),&mov, hitBox);
+    std::vector<Entity *> hitMarines = ch.detectMeleeCollision(ch.getQuadMarines(), hitBox);
     for(const auto& x: hitMarines){
         //update hit marine
         x->collidingProjectile(damage);
     }
 
     //vector of each turret the melee attack connects with
-    std::vector<Entity *> hitTurrets = ch.detectMeleeCollision(ch.getQuadTreeEntities(ch.quadtreeTurret,
-            &mov),&mov, hitBox);
-    for(const auto& y: hitTurrets){
-        //update hit turret
-        y->collidingProjectile(damage);
+    std::vector<Entity *> hitTurrets = ch.detectMeleeCollision(ch.getQuadTurrets(), hitBox);
+    for(const auto& x: hitTurrets){
+        //update hit marine
+        x->collidingProjectile(damage);
     }
 
     //vector of each barricade the melee attack connects with
-    std::vector<Entity *> hitBarricades = ch.detectMeleeCollision(ch.getQuadTreeEntities(ch.quadtreeBarricade,
-            &mov),&mov, hitBox);
-    for(const auto& z: hitTurrets){
-        //update hit barricade
-        z->collidingProjectile(damage);
+    std::vector<Entity *> hitBarricades = ch.detectMeleeCollision(ch.getQuadBarricades(), hitBox);
+    for(const auto& x: hitBarricades){
+        //update hit marine
+        x->collidingProjectile(damage);
     }
+
     clip++;
 
     return true;

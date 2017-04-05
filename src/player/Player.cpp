@@ -45,6 +45,15 @@ void Player::sendServAttackAction() {
     NetworkManager::instance().writeUDPSocket((char *)&attackAction, sizeof(ClientMessage));
 }
 
+/*
+void sendServPickUpAction(int32_t weaponId) {
+    typedef struct {
+        UDPHeaders entitytype;
+        int32_t entityid;
+    }  __attribute__((packed, aligned(1))) DeleteAction;
+    deleteAction.
+}
+*/
 void Player::handleMouseUpdate(const int winWidth, const int winHeight, const float camX, const float camY) {
     int mouseX;
     int mouseY;
@@ -209,4 +218,3 @@ void Player::checkMarineState() {
         setControl(nullptr);
     }
 }
-

@@ -18,7 +18,7 @@ public:
             int fireDelay, int32_t id);
     ~InstantWeapon() = default;
 
-    virtual bool fire(Movable& movable);
+    virtual bool fire(const float x, const float y, const double angle);
     void fireSingleProjectile(int gunX, int gunY, double angle);
 
 };

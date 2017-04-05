@@ -95,7 +95,7 @@ bool Weapon::chamberRound() {
 }
 
 //Deric M       3/15/2017
-bool Weapon::fire(Movable& movable){
+bool Weapon::fire(const float x, const float y, const double angle) {
     logv(3, "Weapon::fire()\n");
     if(!chamberRound()){
         return false;
