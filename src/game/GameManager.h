@@ -68,9 +68,6 @@ public:
     void createMarine(const int32_t id);
     void deleteMarine(const int32_t id);
 
-    const auto& getAllMarines() const {return marineManager;}
-    const auto& getAllZombies() const {return zombieManager;}
-
     bool addMarine(const int32_t id, const Marine& newMarine);
     auto getMarine(const int32_t id) {return marineManager[id];};
 
@@ -127,8 +124,9 @@ public:
     int32_t createWall(const float x, const float y, const int h, const int w); // create Wall object
 
     //network update Methods
-    void updateMarine(const PlayerData &playerData);
-    void updateZombie(const ZombieData &zombieData);
+    void updateMarine(const PlayerData& playerData);
+    void updateZombie(const ZombieData& zombieData);
+    void updateTurret(const TurretData& turretData);
     void handleAttackAction(const AttackAction& attackAction);
 
     void setPlayerUsername(int32_t id, const char * username);
@@ -156,8 +154,6 @@ public:
     void setAiMap(const std::array<std::array<bool, M_WIDTH>, M_HEIGHT>& a) {
         AiMap = a;
     }
-
-
 
     //getManagers
     auto& getStoreManager() const {return storeManager;};

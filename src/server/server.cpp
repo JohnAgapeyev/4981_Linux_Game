@@ -258,6 +258,14 @@ std::string genOutputPacket() {
     }
     pBuff = reinterpret_cast<int32_t *>(pDrop);
 
+    const auto& turrets = getTurrets();
+    *pBuff++ = turrets.size();
+    TurretData *pTurret = reinterpret_cast<TurretData *>(pBuff);
+    for(const auto& tur : turrets) {
+        memcpy(pTurret++, &tur, sizeof(TurretData));
+    }
+    pBuff = reinterpret_cast<int32_t *>(pTurret);
+
     //calculate how full the packet is for when its sent
     const size_t outputLength = (pBuff - reinterpret_cast<int32_t *>(outputPacket)) * sizeof(int32_t);
     return std::string(outputPacket, outputLength);

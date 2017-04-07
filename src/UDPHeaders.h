@@ -52,6 +52,7 @@ enum class UDPHeaders : int32_t {
     SYNCH, // game sync from server
     PLAYERH, // players
     ZOMBIEH, // zombies
+    TURRETH,
     ATTACKACTIONH, //attacks
     SHOPPURCHASEH, // shop purchase
     BARRICADEACTIONH, // action on barricade
@@ -292,6 +293,14 @@ typedef struct {
     float direction;
 }  __attribute__((packed, aligned(1))) ZombieData;
 
+typedef struct {
+    int32_t turretid;
+    int32_t health;
+    float xpos;
+    float ypos;
+    float direction;
+}  __attribute__((packed, aligned(1))) TurretData;
+
 /*------------------------------------------------------------------------------
 * Struct: DeleteAction
 *
@@ -360,6 +369,9 @@ typedef struct
     int32_t weapondropheaderid = static_cast<int32_t>(UDPHeaders::WEAPONDROPREQUEST);
     int32_t ndrops;
     WeaponDropAction *drops;
+    int32_t turretheaderid = static_cast<int32_t>(UDPHeaders::TURRETH);
+    int32_t nturrets;
+    TurretData *turrets;
 } GameSync;
 
 /*------------------------------------------------------------------------------

@@ -150,6 +150,7 @@ void parseGameSync(const void *syncBuff, size_t bytesReads) {
     AttackAction *attack;
     ZombieData *zombie;
     DeleteAction *deletion;
+    TurretData *turret;
 
     while (pBuff <= pEnd) {
         switch(static_cast<UDPHeaders>(*pBuff++)) {
@@ -179,6 +180,13 @@ void parseGameSync(const void *syncBuff, size_t bytesReads) {
                     deletion = reinterpret_cast<DeleteAction *>(pBuff);
                     deleteEntity(*deletion);
                     pBuff = reinterpret_cast<int32_t *>(++deletion);
+                }
+                break;
+            case UDPHeaders::TURRETH:
+                for (int32_t i = 0, tCount = *pBuff++; i < tCount; ++i){
+                    turret = reinterpret_cast<TurretData *>(pBuff);
+                    GameManager::instance()->updateTurret(*turret);
+                    pBuff = reinterpret_cast<int32_t *>(++turret);
                 }
                 break;
             default:
