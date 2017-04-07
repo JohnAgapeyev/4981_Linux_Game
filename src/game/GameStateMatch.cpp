@@ -273,13 +273,14 @@ void GameStateMatch::update(const float delta) {
     if (!networked) {
         GameManager::instance()->updateTurrets();
         matchManager.checkMatchState();
-
-        if (GameManager::instance()->getPlayer().checkMarineState()) {
+#ifndef SERVER
+/*
+        if (!networked && GameManager::instance()->getPlayer().checkMarineState()) {
             GameManager::instance()->getPlayer().respawn(GameManager::instance()->getBase().getSpawnPoint());
         }
+*/
     }
 
-#ifndef SERVER
     // Move Camera
     if(GameManager::instance()->getPlayer().getMarine()){
         camera.move(GameManager::instance()->getPlayer().getMarine()->getX(),

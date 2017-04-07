@@ -62,8 +62,10 @@ public:
     Inventory inventory;
     void setHealth(const int hlth) {health = hlth;};
     int getCurrentHealth() {return health;}; //returns the current health of the marine
-
+    void setRespawnTick(int tick) {respawnTick = tick;};
+    int getRespawnTick() const {return respawnTick;};
 private:
+    int respawnTick;
     std::string username;
     int health = 100;
     int state; //used to select sprite to display
