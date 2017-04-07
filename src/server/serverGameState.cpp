@@ -161,7 +161,7 @@ std::vector<PlayerData> getPlayers() {
     std::vector<PlayerData> rtn;
     PlayerData tempPlayer;
     std::lock_guard<std::mutex> lock(mut);
-    for (const auto& idPlayerPair : gm->getAllMarines()) {
+    for (const auto& idPlayerPair : gm->getMarineManager()) {
         const auto& marine = idPlayerPair.second;
         memset(&tempPlayer, 0, sizeof(tempPlayer));
 
@@ -191,7 +191,7 @@ std::vector<ZombieData> getZombies() {
     std::vector<ZombieData> rtn;
     ZombieData tempZombie;
     std::lock_guard<std::mutex> lock(mut);
-    for (const auto& idZombiePair : gm->getAllZombies()) {
+    for (const auto& idZombiePair : gm->getZombieManager()) {
         const auto& zombie = idZombiePair.second;
         memset(&tempZombie, 0, sizeof(tempZombie));
 
@@ -210,6 +210,27 @@ std::vector<ZombieData> getZombies() {
 
 std::vector<DeleteAction> getDeletions() {
     return deleteList;
+}
+
+std::vector<TurretData> getTurrets() {
+    std::vector<TurretData> rtn;
+    TurretData tempturret;
+    std::lock_guard<std::mutex> lock(mut);
+    for (const auto& idturretPair : gm->getTurretManager()) {
+        const auto& turret = idturretPair.second;
+        if (turret.isActivated() && turret.isPlaced()) {
+            memset(&tempturret, 0, sizeof(tempturret));
+
+            tempturret.turretid = idturretPair.first;
+            tempturret.xpos = turret.getX();
+            tempturret.ypos = turret.getY();
+            tempturret.direction = turret.getAngle();
+            tempturret.health = turret.getHealth();
+
+            rtn.push_back(tempturret);
+        }
+    }
+    return rtn;
 }
 
 void deleteEntity(const DeleteAction& da) {
