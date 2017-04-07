@@ -18,12 +18,13 @@
 ------------------------------------------------------------------------------*/
 #ifndef COLLISION_H
 #define COLLISION_H
-#include "HitBox.h"
-#include "Quadtree.h"
+
 #include <vector>
 #include <queue>
-#include "../inventory/weapons/Target.h"
 
+#include "HitBox.h"
+#include "Quadtree.h"
+#include "../inventory/weapons/Target.h"
 
 class Movable;
 
@@ -45,28 +46,49 @@ public:
     Entity *detectPickUpCollision(std::vector<Entity*> returnObjects, const Entity *entity);
 
     void detectLineCollision(TargetList& targetList, const int gunX, const int gunY, const double angle, const int range);
+
     std::vector<Entity *> detectMeleeCollision(const Quadtree& q, const HitBox hb);
-
     std::vector<Entity *>getQuadTreeEntities(Quadtree& q, const Entity *entity); // General Collision handler, pass in quadtree check
-    Quadtree& getQuadTurrets() {return quadtreeTurret;};
-    Quadtree& getQuadMarines() {return quadtreeMarine;};
-    Quadtree& getQuadBarricades() {return quadtreeBarricade;};
 
-    Quadtree quadtreeMarine; //can take dmg
-    Quadtree quadtreeZombie; //can take dmg
-    Quadtree quadtreeBarricade; //can take dmg
-    Quadtree quadtreeTurret;
-    Quadtree quadtreeWall;
-    Quadtree quadtreePickUp;
-    Quadtree quadtreeObj;
-    Quadtree quadtreeStore;
+    std::vector<Entity *>getQuadTreeEntities(const Quadtree& q, const Entity *entity) const; // General Collision handler, pass in quadtree check
 
     CollisionHandler& operator=(const CollisionHandler& handle);
 
+    void clear();
+    void insertMarine(Entity *e);
+    void insertZombie(Entity *e);
+    void insertBarricade(Entity *e);
+    void insertTurret(Entity *e);
+    void insertWall(Entity *e);
+    void insertPickUp(Entity *e);
+    void insertObj(Entity *e);
+    void insertStore(Entity *e);
+
+    auto& getZombieMovementTree() const {return zombieMovementTree;}
+    auto& getMarineTree() const {return marineTree;}
+    auto& getZombieTree() const {return zombieTree;}
+    auto& getBarricadeTree() const {return barricadeTree;}
+    auto& getTurretTree() const {return turretTree;}
+    auto& getWallTree() const {return wallTree;}
+    auto& getPickUpTree() const {return pickUpTree;}
+    auto& getObjTree() const {return objTree;}
+    auto& getStoreTree() const {return storeTree;}
+
 private:
     void checkForTargetsInVector(const int gunX, const int gunY, const int endX, const int endY,
-        TargetList& targetList, std::vector<Entity*>& allEntities, int type);
+        TargetList& targetList, const std::vector<Entity*>& allEntities, const int type) const;
 
+    void insertZombieMovementEntity(Entity *e);
+
+    Quadtree zombieMovementTree;
+    Quadtree marineTree; //can take dmg
+    Quadtree zombieTree; //can take dmg
+    Quadtree barricadeTree; //can take dmg
+    Quadtree turretTree;
+    Quadtree wallTree;
+    Quadtree pickUpTree;
+    Quadtree objTree;
+    Quadtree storeTree;
 };
 
 

@@ -199,6 +199,8 @@ std::vector<ZombieData> getZombies() {
         tempZombie.health = zombie.getHealth();
         tempZombie.xpos = zombie.getX();
         tempZombie.ypos = zombie.getY();
+        tempZombie.xdel = zombie.getDX();
+        tempZombie.ydel = zombie.getDY();
         tempZombie.direction = zombie.getAngle();
 
         rtn.push_back(tempZombie);

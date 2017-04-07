@@ -295,6 +295,8 @@ typedef struct {
     int32_t health;
     float xpos;
     float ypos;
+    float xdel;
+    float ydel;
     float direction;
 }  __attribute__((packed, aligned(1))) ZombieData;
 

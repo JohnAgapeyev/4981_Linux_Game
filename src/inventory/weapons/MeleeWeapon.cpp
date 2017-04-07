@@ -65,22 +65,19 @@ bool MeleeWeapon::fire(const float x, const float y, const double angle){
 
     CollisionHandler &ch = GameManager::instance()->getCollisionHandler();
 
-    //vector of each marine the melee attack connects with
-    std::vector<Entity *> hitMarines = ch.detectMeleeCollision(ch.getQuadMarines(), hitBox);
+    std::vector<Entity *> hitMarines = ch.detectMeleeCollision(ch.getMarineTree(), hitBox);
     for(const auto& x: hitMarines){
         //update hit marine
         x->collidingProjectile(damage);
     }
 
-    //vector of each turret the melee attack connects with
-    std::vector<Entity *> hitTurrets = ch.detectMeleeCollision(ch.getQuadTurrets(), hitBox);
+    std::vector<Entity *> hitTurrets = ch.detectMeleeCollision(ch.getTurretTree(), hitBox);
     for(const auto& x: hitTurrets){
         //update hit marine
         x->collidingProjectile(damage);
     }
 
-    //vector of each barricade the melee attack connects with
-    std::vector<Entity *> hitBarricades = ch.detectMeleeCollision(ch.getQuadBarricades(), hitBox);
+    std::vector<Entity *> hitBarricades = ch.detectMeleeCollision(ch.getBarricadeTree(), hitBox);
     for(const auto& x: hitBarricades){
         //update hit marine
         x->collidingProjectile(damage);
