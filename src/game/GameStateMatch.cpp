@@ -268,10 +268,10 @@ void GameStateMatch::update(const float delta) {
 #endif
     GameManager::instance()->updateMarines(delta);
     GameManager::instance()->updateZombies(delta);
+    GameManager::instance()->updateBase();
 
     if (!networked) {
         GameManager::instance()->updateTurrets();
-        GameManager::instance()->updateBase();
         GameManager::instance()->getPlayer().checkMarineState();
         matchManager.checkMatchState();
     }
