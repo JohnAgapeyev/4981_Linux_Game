@@ -52,7 +52,6 @@ bool GameStateMatch::load() {
                 &GameManager::instance()->getMarine(NetworkManager::instance().getPlayerId()).first);
         GameManager::instance()->getPlayer().setId(NetworkManager::instance().getPlayerId());
     } else {
-        GameManager::instance()->addObject(GameManager::instance()->getBase());
 #ifndef SERVER
         const Point newPoint = GameManager::instance()->getBase().getSpawnPoint();
         GameManager::instance()->getPlayer().setControl(
@@ -61,6 +60,9 @@ bool GameStateMatch::load() {
         GameManager::instance()->getPlayer().getMarine()->setSrcRect(SPRITE_FRONT, SPRITE_FRONT, SPRITE_SIZE_X, SPRITE_SIZE_Y);
 #endif
     }
+
+    GameManager::instance()->addObject(GameManager::instance()->getBase());
+
 
     bool success = true;
     //set the boundary on the map
