@@ -272,8 +272,11 @@ void GameStateMatch::update(const float delta) {
 
     if (!networked) {
         GameManager::instance()->updateTurrets();
-        GameManager::instance()->getPlayer().checkMarineState();
         matchManager.checkMatchState();
+
+        if (GameManager::instance()->getPlayer().checkMarineState()) {
+            GameManager::instance()->getPlayer().respawn(GameManager::instance()->getBase().getSpawnPoint());
+        }
     }
 
 #ifndef SERVER
@@ -283,10 +286,6 @@ void GameStateMatch::update(const float delta) {
                 GameManager::instance()->getPlayer().getMarine()->getY());
     }
 #endif
-
-    if (GameManager::instance()->getPlayer().checkMarineState()) {
-        GameManager::instance()->getPlayer().respawn(GameManager::instance()->getBase().getSpawnPoint());
-    }
 }
 
 /**
