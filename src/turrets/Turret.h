@@ -58,15 +58,18 @@ public:
     void move(const float playerX, const float playerY,
             const float moveX, const float moveY, CollisionHandler& ch);
     void placeTurret();
-    bool isPlaced() {return placed;};
+    bool isPlaced() const {return placed;};
     void pickUpTurret();
-    bool isActivated() {return activated;};
+    bool isActivated() const {return activated;};
     void removeTurret(); // removes the turret
     Inventory getInventory() const {return inventory;};
     // Jamie Lee, 2017-03-01.
     float getRange() const {
         return range;
     }
+
+    int getHealth() const {return health;}
+    void setHealth(const int hlth) {health = hlth;}
 
 
 private:

@@ -832,7 +832,7 @@ Checks if there is a marine in the marineManager with the id in the
 playData struct, if not it creates a marine with that id. Whether it
 created it or not it updates it's positition angle and health.
 */
-void GameManager::updateMarine(const PlayerData &playerData) {
+void GameManager::updateMarine(const PlayerData& playerData) {
     if (marineManager.count(playerData.playerid) == 0) {
         createMarine(playerData.playerid);
     }
@@ -855,7 +855,7 @@ Checks if there is a zombie in the zombieManager with the id in the
 playData struct, if not it creates that zombie with that id. Whether
 it created it or not it updates it's positition angle and health.
 */
-void GameManager::updateZombie(const ZombieData &zombieData) {
+void GameManager::updateZombie(const ZombieData& zombieData) {
     if(zombieManager.find(zombieData.zombieid) == zombieManager.end()) {
         createZombie(zombieData.zombieid);
     }
@@ -892,6 +892,16 @@ void GameManager::handleAttackAction(const AttackAction& attackAction) {
             marine.first.setAngle(curAngle);
         }
     }
+}
+
+void GameManager::updateTurret(const TurretData& turretData) {
+    if(turretManager.find(turretData.turretid) == turretManager.end()) {
+        createTurret();
+    }
+    Turret& turret = turretManager[turretData.turretid].first;
+    turret.setPosition(turretData.xpos, turretData.ypos);
+    turret.setAngle(turretData.direction);
+    turret.setHealth(turretData.health);
 }
 
 /**

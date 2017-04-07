@@ -30,5 +30,6 @@ std::vector<PlayerData> getPlayers();
 std::vector<ZombieData> getZombies();
 std::vector<DeleteAction> getDeletions();
 std::vector<WeaponDropAction> getDrops();
+std::vector<TurretData> getTurrets();
 
 #endif
