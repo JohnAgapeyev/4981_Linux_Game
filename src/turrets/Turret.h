@@ -78,6 +78,7 @@ private:
     bool placed;
     float range; // turret's range.
     int32_t dropzone;
+    int frameCount;
 
     Inventory inventory;
 };
