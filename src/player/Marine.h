@@ -20,6 +20,8 @@ static constexpr int SPRITE_SIZE_X = 75;
 static constexpr int SPRITE_SIZE_Y = 125;
 //speed of walking animation ie frames till next animation
 static constexpr int FRAME_COUNT_WALK = 7;
+//base health of marine
+static constexpr int MARINE_MAX_HEALTH = 100;
 
 static constexpr int SPRITE_RIGHT = SPRITE_SIZE_Y * 2;
 static constexpr int SPRITE_BACK_RIGHT = SPRITE_SIZE_Y * 3;
@@ -58,6 +60,7 @@ public:
     int getHealth() {return health;};
     void updateImageDirection();
     void updateImageWalk();
+    void updateLifeState();
     void activateStore(const Entity *ep);
     Inventory inventory;
     void setHealth(const int hlth) {health = hlth;};
@@ -65,11 +68,12 @@ public:
     void setRespawnTick(int tick) {respawnTick = tick;};
     int getRespawnTick() const {return respawnTick;};
 private:
-    int respawnTick;
     std::string username;
-    int health = 100;
+    int health = MARINE_MAX_HEALTH;
     int state; //used to select sprite to display
     static int frameCount;
+    bool lifeState = true;
+    int respawnTick;
 };
 
 #endif

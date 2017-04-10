@@ -355,6 +355,7 @@ void Player::handleTempTurret(SDL_Renderer *renderer) {
  * Description:
  *      Check marine health if 0 kill marine, also check if player respawns.
  */
+/*
 bool Player::checkMarineState() {
     if (marine && marine->getHealth() <= 0) {
         GameManager::instance()->deleteMarine(marine->getId());
@@ -364,7 +365,7 @@ bool Player::checkMarineState() {
     }
     return !marine && (static_cast<int>(SDL_GetTicks()) >= (respawnTick + RESPAWN_DELAY));
 }
-
+*/
 /**
  * Date: Apl. 5, 2017
  * Author: Jacob McPhail
@@ -374,6 +375,7 @@ bool Player::checkMarineState() {
  * Description:
  *      Respawn player with a new marine.
  */
+ /*
 void Player::respawn(const Point& newPoint) {
     const int32_t playerMarineID = GameManager::instance()->createMarine();
     //gives the player control of the marine
@@ -381,6 +383,7 @@ void Player::respawn(const Point& newPoint) {
     getMarine()->setPosition(newPoint.first, newPoint.second);
     getMarine()->setSrcRect(SPRITE_FRONT, SPRITE_FRONT, SPRITE_SIZE_X, SPRITE_SIZE_Y);
 }
+*/
 
 /**
  * Date: Apl. 5, 2017

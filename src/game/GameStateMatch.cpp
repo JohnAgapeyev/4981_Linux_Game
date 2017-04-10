@@ -273,11 +273,6 @@ void GameStateMatch::update(const float delta) {
     if (!networked) {
         GameManager::instance()->updateTurrets();
         matchManager.checkMatchState();
-/*
-        if (!networked && GameManager::instance()->getPlayer().checkMarineState()) {
-            GameManager::instance()->getPlayer().respawn(GameManager::instance()->getBase().getSpawnPoint());
-        }
-*/
     }
 
 #ifndef SERVER

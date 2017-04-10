@@ -225,6 +225,21 @@ void Marine::updateImageWalk() {
     }
 }
 
+void Marine::updateLifeState() {
+    if (!lifeState && static_cast<int>(SDL_GetTicks()) >= (respawnTick + RESPAWN_DELAY)) {
+        lifeState = true;
+        health = MARINE_MAX_HEALTH;
+        //could result in spawning inside
+        const auto& spawnPoint = GameManager::instance()->getBase().getSpawnPoint();
+        setPosition(spawnPoint.first, spawnPoint.second);
+    } else if (lifeState && health <= 0) {
+        lifeState = false;
+        respawnTick = SDL_GetTicks();
+        //death zone lol
+        setPosition(20000, 20000);
+    }
+}
+
 /*
  *Create by Maitiu March 30
  * Takes in an Entity that is a store and attempts a purchase
