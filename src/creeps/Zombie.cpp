@@ -24,6 +24,7 @@
 #include "../game/GameManager.h"
 #include "../log/log.h"
 #include "../sprites/VisualEffect.h"
+#include "../inventory/weapons/ZombieHand.h"
 #include <cstdlib>
 using namespace std;
 
@@ -35,7 +36,7 @@ using namespace std;
 Zombie::Zombie(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementSize, const SDL_Rect& projectileSize,
         const SDL_Rect& damageSize, const int health) : Entity(id, dest, movementSize, projectileSize,
         damageSize), Movable(id, dest, movementSize, projectileSize, damageSize, ZOMBIE_VELOCITY), health(health),
-        frameCount(0), ignore(0){
+        frameCount(0), ignore(0), flipper(1), actionTick(0), action('\0') {
     logv("Create Zombie\n");
     inventory.initZombie();
 }
@@ -49,7 +50,7 @@ Zombie::~Zombie() {
     logv("Destroy Zombie\n");
 }
 /**
- * Author: Robert Arendac
+ * Author: Isaac Morneau
  *
  * Date: April 6, 2017
  */
@@ -118,6 +119,11 @@ void Zombie::update(){
             }
             //-1 converts from cartisian to screen coords
             setRadianAngle(fmod(atan2(movX, movY) + 2 * M_PI, 2 * M_PI));
+            
+            //we only attack if we are actually in range
+            if (hyp <= ZombieHandVars::RANGE) {
+                zAttack();
+            }
         } else if (ignore > 0){
             --ignore;
         }
@@ -125,36 +131,32 @@ void Zombie::update(){
     //get the distance of 
     setDX(ZOMBIE_VELOCITY * sin(getRadianAngle()));
     setDY(ZOMBIE_VELOCITY * cos(getRadianAngle()));
-
-    //useful for figuring out where the zombies are tracking, it paints a line on where they are currently headed.
-    //for example, right at you.
-#ifndef NDEBUG
-    VisualEffect::instance().addPreLine(2, midMeX, midMeY, midMeX + ZOMBIE_SIGHT * sin(getRadianAngle()),
-        midMeY + ZOMBIE_SIGHT * cos(getRadianAngle()), 0, 0, 0);
-#endif
-
-    //Attack updates
-    if (!(frameCount % CHECK_RATE)){
-        zAttack();
-    }
 }
 
 /**
- * Author: Jamie Lee
+ * Author: Isaac Morneau
  *
  * Date: April 6, 2017
  */
 void Zombie::move(const float moveX, const float moveY, CollisionHandler& ch) {
-    static constexpr int IGNORE_TIME = 10;
-    static constexpr int RANDOM_DEGREE = 5;
+    static constexpr int IGNORE_TIME = 5;
+    static constexpr int PARTIAL_ROTATION = 63;
+    bool hasFlipped = false;
     //Move the Movable left or right
     setX(getX() + moveX);
 
     //if there is a collision with anything with a movement hitbox, move it back
     if (ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getZombieMovementTree(),this),this)) {
         setX(getX() - moveX);
-        setAngle(getAngle() + RANDOM_DEGREE * (1 - rand()));
-        ignore = IGNORE_TIME;
+        //we are avoiding but its not working so flip
+        if(ignore == IGNORE_TIME -1){
+            hasFlipped = true;
+            flipper *= -1;
+        //we are not currently avoiding, start
+        } else if (!ignore) {
+            ignore = IGNORE_TIME;
+        }
+        setAngle(getAngle() + (flipper * PARTIAL_ROTATION));
     }
 
     //Move the Movable up or down
@@ -163,18 +165,29 @@ void Zombie::move(const float moveX, const float moveY, CollisionHandler& ch) {
     //if there is a collision with anything with a movement hitbox, move it back
     if (ch.detectMovementCollision(ch.getQuadTreeEntities(ch.getZombieMovementTree(),this),this)) {
         setY(getY() - moveY);
-        setAngle(getAngle() + RANDOM_DEGREE * (1 - rand()));
-        ignore = IGNORE_TIME;
+        //we are avoiding but its not working so flip
+        if(ignore == IGNORE_TIME -1 && !hasFlipped){
+            flipper *= -1;
+        //we are not currently avoiding, start
+        } else if (!ignore) {
+            ignore = IGNORE_TIME;
+        }
+        setAngle(getAngle() + (flipper * PARTIAL_ROTATION));
     }
 }
 
 /**
- * Author: Jamie Lee
+ * Author: Mark Tattrie
  *
  * Date: April 6, 2017
  */
 void Zombie::collidingProjectile(int damage) {
     health -= damage;
+    VisualEffect::instance().addBlood(getDestRect());
+    if (actionTick < frameCount) {
+        action = 'd';
+        actionTick = frameCount + HIT_DURATION;
+    }
     if (health <= 0) {
         GameManager::instance()->deleteZombie(getId());
     }
@@ -191,6 +204,11 @@ void Zombie::zAttack(){
     Weapon* w = inventory.getCurrent();
     if (w){
         w->fire(*this);
+        //should only add a new animation if a different one isnt playing
+        if (actionTick < frameCount) {
+            action = 'a';
+            actionTick = frameCount + ATTACK_DURATION;
+        }
     } else {
         logv("Zombie Slot Empty\n");
     }
@@ -259,6 +277,13 @@ void Zombie::updateImageWalk() {
     } else {
         setSrcRect(SPRITE_FRONT, getSrcRect().y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
     }
+    if (actionTick > frameCount) {
+        const auto& sr = getSrcRect();
+        setSrcRect(action == 'a' ? ZOMBIE_ATTACK_X : ZOMBIE_HIT_X, sr.y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
+    } else if (actionTick == frameCount) {
+        const auto& sr = getSrcRect();
+        setSrcRect(ZOMBIE_FRONT, sr.y, SPRITE_SIZE_X, SPRITE_SIZE_Y);
+    }
 }
 
 /**
@@ -266,7 +291,7 @@ void Zombie::updateImageWalk() {
 *
 * Designer: Trista Huang
 *
-* Programmer: Fred Yang
+* Programmer: Isaac Morneau
 *
 * Interface: void Marine::updateImageDirection()
 *
