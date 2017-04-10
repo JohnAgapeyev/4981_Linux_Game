@@ -114,7 +114,7 @@ void Turret::saveAttackAction() const {
     aa.xpos = getX();
     aa.ypos = getY();
     aa.direction = getAngle();
-    
+
     saveAttack(aa);
 }
 
@@ -207,7 +207,14 @@ void Turret::collidingProjectile(const int damage) {
 void Turret::shootTurret() {
     Weapon *w = inventory.getCurrent();
     if (w) {
+
+#ifdef SERVER
+        if (w->fire(getX(), getY(), getAngle())) {
+            saveAttackAction();
+        }
+#else
         w->fire(getX(), getY(), getAngle());
+#endif
     }
     // play turrent fire effect
 	//AudioManager::instance().playEffect(EFX_WLPISTOL);

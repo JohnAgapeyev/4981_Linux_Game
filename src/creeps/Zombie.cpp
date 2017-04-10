@@ -59,7 +59,7 @@ void Zombie::saveAttackAction() const {
     aa.xpos = getX();
     aa.ypos = getY();
     aa.direction = getAngle();
-    
+
     saveAttack(aa);
 }
 /**
@@ -216,8 +216,14 @@ void Zombie::collidingProjectile(int damage) {
  */
 void Zombie::zAttack(){
     Weapon* w = inventory.getCurrent();
-    if (w){
+    if (w) {
+#ifdef SERVER
+        if (w->fire(getX(), getY(), getAngle())) {
+            saveAttackAction();
+        }
+#else
         w->fire(getX(), getY(), getAngle());
+#endif
         //should only add a new animation if a different one isnt playing
         if (actionTick < frameCount) {
             action = 'a';

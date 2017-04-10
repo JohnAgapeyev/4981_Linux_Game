@@ -111,13 +111,7 @@ bool Weapon::fire(const float x, const float y, const double angle) {
     }
 #ifndef SERVER
     if (networked) {
-        if (type == TurretGunVars::TYPE) {
-            GameManager::instance()->getZombie(movable.getId()).sendServAttackAction();
-        } else if (type == ZombieHandVars::TYPE) {
-            GameManager::instance()->getTurret(movable.getId()).sendServAttackAction();
-        } else {
-            GameManager::instance()->getPlayer().sendServAttackAction();
-        }
+        GameManager::instance()->getPlayer().sendServAttackAction();
     }
     AudioManager::instance().playEffect(fireSound.c_str());
 #endif
