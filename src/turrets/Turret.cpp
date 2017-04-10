@@ -33,8 +33,8 @@
 #include "Turret.h"
 #include "../game/GameManager.h"
 #include "../log/log.h"
-//for the angle update rate
 #include "../creeps/Zombie.h"
+#include "../server/servergamestate.h"
 
 /**
  * Date: Feb. 02, 2017
@@ -106,16 +106,16 @@ bool Turret::placementCheckTurret(){
     return true;
 }
 
-void Turret::sendServAttackAction() const {
-    ClientMessage packet;
-    packet.data.aa.entityid = getId();
-    packet.data.aa.entitytype = UDPHeaders::TURRET;
-    packet.data.aa.weaponid = inventory.getCurrent()->getID();
-    packet.data.aa.xpos = getX();
-    packet.data.aa.ypos = getY();
-    packet.data.aa.direction = getAngle();
-
-    NetworkManager::instance().writeUDPSocket(reinterpret_cast<char *>(&packet), sizeof(ClientMessage));
+void Turret::saveAttackAction() const {
+    AttackAction aa;
+    aa.entityid = getId();
+    aa.entitytype = UDPHeaders::TURRET;
+    aa.weaponid = inventory.getCurrent()->getID();
+    aa.xpos = getX();
+    aa.ypos = getY();
+    aa.direction = getAngle();
+    
+    saveAttack(aa);
 }
 
 /**
@@ -192,7 +192,7 @@ void Turret::collidingProjectile(const int damage) {
  *
  * Designer: Mark Chen
  *
- * Programmer: Mark Chen
+ * Programmer: Mark Chen, Alex Zielinski
  *
  * Function Interface: void shootTurret()
  *
@@ -202,12 +202,15 @@ void Turret::collidingProjectile(const int damage) {
  * Revisions:
  * Mar. 30, 2017, Mark Chen : Made the function actually fire the turrets weapon.
  * Apr. 04, 2017, Mark Chen : Altered the funuction to check for null weapon.
+ * Apr. 10, 2017, Alex Zielinski: Implemented turret fire sound effect
  */
 void Turret::shootTurret() {
     Weapon *w = inventory.getCurrent();
     if (w) {
         w->fire(getX(), getY(), getAngle());
     }
+    // play turrent fire effect
+	//AudioManager::instance().playEffect(EFX_WLPISTOL);
 }
 
 /**

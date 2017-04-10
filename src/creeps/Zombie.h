@@ -92,7 +92,7 @@ public:
     void updateImageWalk();
     void updateImageDirection();
     void zAttack();//ATTACK!
-    void sendServAttackAction() const;
+    void saveAttackAction() const;
 
 private:
     int health;// health points of zombie

@@ -19,13 +19,14 @@
 #include <cmath>
 #include <random>
 #include <cassert>
+#include <cstdlib>
 #include <utility>
 #include "Zombie.h"
 #include "../game/GameManager.h"
 #include "../log/log.h"
 #include "../sprites/VisualEffect.h"
 #include "../inventory/weapons/ZombieHand.h"
-#include <cstdlib>
+#include "../server/servergamestate.h"
 using namespace std;
 
 /**
@@ -50,16 +51,16 @@ Zombie::~Zombie() {
     logv("Destroy Zombie\n");
 }
 
-void Zombie::sendServAttackAction() const {
-    ClientMessage packet;
-    packet.data.aa.entityid = getId();
-    packet.data.aa.entitytype = UDPHeaders::ZOMBIE;
-    packet.data.aa.weaponid = inventory.getCurrent()->getID();
-    packet.data.aa.xpos = getX();
-    packet.data.aa.ypos = getY();
-    packet.data.aa.direction = getAngle();
-
-    NetworkManager::instance().writeUDPSocket(reinterpret_cast<char *>(&packet), sizeof(ClientMessage));
+void Zombie::saveAttackAction() const {
+    AttackAction aa;
+    aa.entityid = getId();
+    aa.entitytype = UDPHeaders::ZOMBIE;
+    aa.weaponid = inventory.getCurrent()->getID();
+    aa.xpos = getX();
+    aa.ypos = getY();
+    aa.direction = getAngle();
+    
+    saveAttack(aa);
 }
 /**
  * Author: Isaac Morneau
