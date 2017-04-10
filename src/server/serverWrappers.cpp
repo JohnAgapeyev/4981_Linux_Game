@@ -354,7 +354,7 @@ void processClientUsername(const int sock, const char *buff, std::pair<const int
     outBuff[5] = '/';
 
     gm->createMarine(client.first);
-    auto& marine = gm->getMarine(client.first).first;
+    auto& marine = gm->getMarine(client.first);
     const auto& spawnPoint = base.getSpawnPoint();
     marine.setPosition(spawnPoint.first, spawnPoint.second);
 

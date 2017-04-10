@@ -49,6 +49,18 @@ Zombie::Zombie(const int32_t id, const SDL_Rect& dest, const SDL_Rect& movementS
 Zombie::~Zombie() {
     logv("Destroy Zombie\n");
 }
+
+void Zombie::sendServAttackAction() const {
+    ClientMessage packet;
+    packet.data.aa.entityid = getId();
+    packet.data.aa.entitytype = UDPHeaders::ZOMBIE;
+    packet.data.aa.weaponid = inventory.getCurrent()->getID();
+    packet.data.aa.xpos = getX();
+    packet.data.aa.ypos = getY();
+    packet.data.aa.direction = getAngle();
+
+    NetworkManager::instance().writeUDPSocket(reinterpret_cast<char *>(&packet), sizeof(ClientMessage));
+}
 /**
  * Author: Isaac Morneau
  *

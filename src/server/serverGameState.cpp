@@ -48,12 +48,7 @@ void clearWeaponDrops() {
 void updateMarine(const MoveAction& ma) {
     std::lock_guard<std::mutex> lock(mut);
     if (gm->hasMarine(ma.id)) {
-        const auto& p = gm->getMarine(ma.id);
-        if (!p.second) {
-            logv("Marine not found with id %d\n", ma.id);
-            return;
-        }
-        auto& marine = p.first;
+        auto& marine = gm->getMarine(ma.id);
         marine.setPosition(ma.xpos, ma.ypos);
         marine.setDX(ma.xdel);
         marine.setDY(ma.ydel);
@@ -66,24 +61,45 @@ void updateMarine(const MoveAction& ma) {
 
 void performAttack(const AttackAction& aa) {
     std::lock_guard<std::mutex> lock(mut);
-    if (gm->hasMarine(aa.playerid)) {
-        const auto& p = gm->getMarine(aa.playerid);
-        if (!p.second) {
-            logv("Marine not found with id %d\n", aa.playerid);
-            return;
-        }
-        auto& marine = p.first;
-        marine.setPosition(aa.xpos, aa.ypos);
-        marine.setAngle(aa.direction);
+    switch(aa.entitytype) {
+        case UDPHeaders::MARINE:
+            if (gm->hasMarine(aa.entityid)) {
+                auto& marine = gm->getMarine(aa.entityid);
+                marine.setPosition(aa.xpos, aa.ypos);
+                marine.setAngle(aa.direction);
 
-        /* Using marine.fireWeapon instead because weapon ids aren't implemented and I wanted
-        to get shooting working. From Brody */
-        //const auto& weapon = gm->getWeapon(aa.weaponid);
-        //weapon->fire(marine);
+                /* Using marine.fireWeapon instead because weapon ids aren't implemented and I wanted
+                to get shooting working. From Brody */
+                //const auto& weapon = gm->getWeapon(aa.weaponid);
+                //weapon->fire(marine);
 
-        marine.fireWeapon();
-    } else {
-        logv("Marine not found with id %d\n", aa.playerid);
+                marine.fireWeapon();
+            } else {
+                logv("Marine not found with id %d\n", aa.entityid);
+            }
+            break;
+        case UDPHeaders::ZOMBIE:
+            if (gm->zombieExists(aa.entityid)) {
+                auto& zombie = gm->getZombie(aa.entityid);
+                zombie.setPosition(aa.xpos, aa.ypos);
+                zombie.setAngle(aa.direction);
+                zombie.zAttack();
+            } else {
+                logv("Zombie not found with id %d\n", aa.entityid);
+            }
+            break;
+        case UDPHeaders::TURRET:
+            if (gm->hasTurret(aa.entityid)) {
+                auto& turret = gm->getTurret(aa.entityid);
+                turret.setPosition(aa.xpos, aa.ypos);
+                turret.setAngle(aa.direction);
+                turret.shootTurret();
+            } else {
+                logv("Turret not found with id %d\n", aa.entityid);
+            }
+            break;
+        default:
+            break;
     }
 }
 

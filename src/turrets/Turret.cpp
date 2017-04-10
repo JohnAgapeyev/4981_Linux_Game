@@ -106,6 +106,18 @@ bool Turret::placementCheckTurret(){
     return true;
 }
 
+void Turret::sendServAttackAction() const {
+    ClientMessage packet;
+    packet.data.aa.entityid = getId();
+    packet.data.aa.entitytype = UDPHeaders::TURRET;
+    packet.data.aa.weaponid = inventory.getCurrent()->getID();
+    packet.data.aa.xpos = getX();
+    packet.data.aa.ypos = getY();
+    packet.data.aa.direction = getAngle();
+
+    NetworkManager::instance().writeUDPSocket(reinterpret_cast<char *>(&packet), sizeof(ClientMessage));
+}
+
 /**
  * Date: Mar. 10, 2017
  *
@@ -192,7 +204,6 @@ void Turret::collidingProjectile(const int damage) {
  * Apr. 04, 2017, Mark Chen : Altered the funuction to check for null weapon.
  */
 void Turret::shootTurret() {
-
     Weapon *w = inventory.getCurrent();
     if (w) {
         w->fire(getX(), getY(), getAngle());

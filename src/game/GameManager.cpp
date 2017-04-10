@@ -322,7 +322,9 @@ void GameManager::createMarine(const int32_t id, const int32_t weaponId) {
 
     addWeapon(std::dynamic_pointer_cast<Weapon>(
             std::make_shared<HandGun>(HandGun(weaponId))));
-    marineManager[id].first.inventory.setDefault(weaponId);
+    if (id == NetworkManager::instance().getPlayerId()) {
+        marineManager[id].first.inventory.setDefault(weaponId);
+    }
 }
 
 /**
@@ -369,12 +371,12 @@ bool GameManager::addMarine(const int32_t id, const Marine& newMarine) {
  * Description:
  *     Get a marine by its id
  */
-/*
+
 Marine& GameManager::getMarine(const int32_t id) {
-    const auto& mar = marineManager[id];
+    auto mar = marineManager[id];
     assert(mar.second);
     return mar.first;
-}*/
+}
 
 /**
  * Date: Feb. 9, 2017
@@ -432,6 +434,10 @@ bool GameManager::addTurret (const int32_t id, const Turret& newTurret) {
     }
     turretManager.emplace(id, newTurret);
     return true;
+}
+
+bool GameManager::hasTurret(const int32_t id) const {
+    return turretManager.count(id);
 }
 
 /**
@@ -865,18 +871,49 @@ action but support for weapon ids hasn't been implemented so ignores it and
 fires current weapon.
 */
 void GameManager::handleAttackAction(const AttackAction& attackAction) {
-    if (!(attackAction.playerid == player.getId())) {
-        auto marine = marineManager[attackAction.playerid];
-        if (marine.second) {
-            int curX = marine.first.getX();
-            int curY = marine.first.getY();
-            double curAngle = marine.first.getAngle();
-            marine.first.setPosition(attackAction.xpos, attackAction.ypos);
-            marine.first.setAngle(attackAction.direction);
-            marine.first.fireWeapon();
-            marine.first.setPosition(curX, curY);
-            marine.first.setAngle(curAngle);
-        }
+    switch(attackAction.entitytype) {
+        case UDPHeaders::MARINE:
+            if (attackAction.entityid != player.getId()) {
+                auto marine = getMarine(attackAction.entityid);
+                const int curX = marine.getX();
+                const int curY = marine.getY();
+                const double curAngle = marine.getAngle();
+                marine.setPosition(attackAction.xpos, attackAction.ypos);
+                marine.setAngle(attackAction.direction);
+                marine.fireWeapon();
+                marine.setPosition(curX, curY);
+                marine.setAngle(curAngle);
+            }
+            break;
+        case UDPHeaders::ZOMBIE:
+            if (zombieExists(attackAction.entityid)) {
+                auto zombie = getZombie(attackAction.entityid);
+                const int curX = zombie.getX();
+                const int curY = zombie.getY();
+                const double curAngle = zombie.getAngle();
+                zombie.setPosition(attackAction.xpos, attackAction.ypos);
+                zombie.setAngle(attackAction.direction);
+                zombie.zAttack();
+                zombie.setPosition(curX, curY);
+                zombie.setAngle(curAngle);
+            }
+            break;
+        case UDPHeaders::TURRET:
+            if (hasTurret(attackAction.entityid)) {
+                auto turret = getTurret(attackAction.entityid);
+                const int curX = turret.getX();
+                const int curY = turret.getY();
+                const double curAngle = turret.getAngle();
+                turret.setPosition(attackAction.xpos, attackAction.ypos);
+                turret.setAngle(attackAction.direction);
+                turret.shootTurret();
+                turret.setPosition(curX, curY);
+                turret.setAngle(curAngle);
+            }
+            break;
+        default:
+            logv("Received attack action with unknown entity type\n");
+            break;
     }
 }
 

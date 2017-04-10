@@ -70,14 +70,14 @@ public:
     void deleteMarine(const int32_t id);
 
     bool addMarine(const int32_t id, const Marine& newMarine);
-    auto getMarine(const int32_t id) {return marineManager[id];};
+    Marine& getMarine(const int32_t id);
 
     Base& getBase() {return base;}
 
     // Methods for creating, getting, and deleting towers from the level.
     int32_t createTurret();
     void deleteTurret(const int32_t id);
-
+    bool hasTurret(const int32_t id) const;
     bool addTurret(const int32_t id, const Turret& newTurret);
     int32_t createTurret(const float x, const float y) ;
     Turret& getTurret(const int32_t id);
@@ -91,10 +91,6 @@ public:
     void updateZombies(const float delta); // Update zombie actions
     void updateTurrets(); // Update turret actions
     void updateBase(); // Update base images
-
-    // returns the list of zombies.
-    // Jamie, 2017-03-01.
-    auto& getZombies() {return zombieManager;};
 
     int32_t addZombie(const Zombie&);
     void createZombie(const int32_t id);
