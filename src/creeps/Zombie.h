@@ -91,6 +91,8 @@ public:
     void update();
     void updateImageWalk();
     void updateImageDirection();
+    void zAttack();//ATTACK!
+    void sendServAttackAction() const;
 
 private:
     int health;// health points of zombie
@@ -100,7 +102,6 @@ private:
     int actionTick;//when the action started
     char action;
     Inventory inventory;//inventory holds a weapon used to attack
-    void zAttack();//ATTACK!
 };
 
 #endif

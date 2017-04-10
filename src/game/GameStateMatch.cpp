@@ -50,12 +50,12 @@ bool GameStateMatch::load() {
 #ifndef SERVER
     if (networked) {
         GameManager::instance()->getPlayer().setControl(
-                &GameManager::instance()->getMarine(NetworkManager::instance().getPlayerId()).first);
+                &GameManager::instance()->getMarine(NetworkManager::instance().getPlayerId()));
         GameManager::instance()->getPlayer().setId(NetworkManager::instance().getPlayerId());
     } else {
         const Point newPoint = GameManager::instance()->getBase().getSpawnPoint();
         GameManager::instance()->getPlayer().setControl(
-                &GameManager::instance()->getMarine(GameManager::instance()->createMarine()).first);
+                &GameManager::instance()->getMarine(GameManager::instance()->createMarine()));
         GameManager::instance()->getPlayer().getMarine()->setPosition(newPoint.first, newPoint.second);
         GameManager::instance()->getPlayer().getMarine()->setSrcRect(SPRITE_FRONT, SPRITE_FRONT, SPRITE_SIZE_X, SPRITE_SIZE_Y);
     }

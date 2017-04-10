@@ -186,8 +186,8 @@ typedef struct {
 * float direction - And Angle in relation to -----
 --------------------------------------------------------------------------*/
 typedef struct {
-    int32_t playerid;
-    int32_t actionid;
+    UDPHeaders entitytype; //Either a marine, zombie, or turret
+    int32_t entityid;
     int32_t weaponid;
     float xpos;
     float ypos;

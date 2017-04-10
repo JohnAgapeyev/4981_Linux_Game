@@ -127,14 +127,14 @@ Notes:
 Updates the player's attack action and send it to the server via UDP.
 -------------------------------------------------------------------------------*/
 void Player::sendServAttackAction() {
-    attackAction.data.aa.playerid = id;
-    attackAction.data.aa.actionid = static_cast<int32_t>(UDPHeaders::SHOOT);
+    attackAction.data.aa.entityid = id;
+    attackAction.data.aa.entitytype = UDPHeaders::MARINE;
     attackAction.data.aa.weaponid = marine->inventory.getCurrent()->getID();
     attackAction.data.aa.xpos = marine->getX();
     attackAction.data.aa.ypos = marine->getY();
     attackAction.data.aa.direction = marine->getAngle();
 
-    NetworkManager::instance().writeUDPSocket((char *)&attackAction, sizeof(ClientMessage));
+    NetworkManager::instance().writeUDPSocket(reinterpret_cast<char *>(&attackAction), sizeof(ClientMessage));
 }
 
 /**
@@ -357,7 +357,7 @@ bool Player::checkMarineState() {
 void Player::respawn(const Point& newPoint) {
     const int32_t playerMarineID = GameManager::instance()->createMarine();
     //gives the player control of the marine
-    setControl(&GameManager::instance()->getMarine(playerMarineID).first);
+    setControl(&GameManager::instance()->getMarine(playerMarineID));
     getMarine()->setPosition(newPoint.first, newPoint.second);
     getMarine()->setSrcRect(SPRITE_FRONT, SPRITE_FRONT, SPRITE_SIZE_X, SPRITE_SIZE_Y);
 }
