@@ -104,15 +104,15 @@ bool Weapon::fire(Movable& movable){
     if(!chamberRound()){
         return false;
     }
-#ifndef SERVER
+#ifdef SERVER
+    if (type == TurretGunVars::TYPE) {
+        GameManager::instance()->getZombie(movable.getId()).saveAttackAction();
+    } else if (type == ZombieHandVars::TYPE) {
+        GameManager::instance()->getTurret(movable.getId()).saveAttackAction();
+    }
+#else
     if (networked) {
-        if (type == TurretGunVars::TYPE) {
-            GameManager::instance()->getZombie(movable.getId()).saveAttackAction();
-        } else if (type == ZombieHandVars::TYPE) {
-            GameManager::instance()->getTurret(movable.getId()).saveAttackAction();
-        } else {
-            GameManager::instance()->getPlayer().sendServAttackAction();
-        }
+        GameManager::instance()->getPlayer().sendServAttackAction();
     }
     AudioManager::instance().playEffect(fireSound.c_str());
 #endif
