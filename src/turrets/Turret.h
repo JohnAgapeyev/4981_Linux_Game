@@ -71,7 +71,7 @@ public:
     int getHealth() const {return health;}
     void setHealth(const int hlth) {health = hlth;}
 
-    void sendServAttackAction() const;
+    void saveAttackAction() const;
 
 
 private:

@@ -33,8 +33,8 @@
 #include "Turret.h"
 #include "../game/GameManager.h"
 #include "../log/log.h"
-//for the angle update rate
 #include "../creeps/Zombie.h"
+#include "../server/servergamestate.h"
 
 /**
  * Date: Feb. 02, 2017
@@ -106,16 +106,16 @@ bool Turret::placementCheckTurret(){
     return true;
 }
 
-void Turret::sendServAttackAction() const {
-    ClientMessage packet;
-    packet.data.aa.entityid = getId();
-    packet.data.aa.entitytype = UDPHeaders::TURRET;
-    packet.data.aa.weaponid = inventory.getCurrent()->getID();
-    packet.data.aa.xpos = getX();
-    packet.data.aa.ypos = getY();
-    packet.data.aa.direction = getAngle();
-
-    NetworkManager::instance().writeUDPSocket(reinterpret_cast<char *>(&packet), sizeof(ClientMessage));
+void Turret::saveAttackAction() const {
+    AttackAction aa;
+    aa.entityid = getId();
+    aa.entitytype = UDPHeaders::TURRET;
+    aa.weaponid = inventory.getCurrent()->getID();
+    aa.xpos = getX();
+    aa.ypos = getY();
+    aa.direction = getAngle();
+    
+    saveAttack(aa);
 }
 
 /**

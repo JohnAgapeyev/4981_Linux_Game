@@ -107,9 +107,9 @@ bool Weapon::fire(Movable& movable){
 #ifndef SERVER
     if (networked) {
         if (type == TurretGunVars::TYPE) {
-            GameManager::instance()->getZombie(movable.getId()).sendServAttackAction();
+            GameManager::instance()->getZombie(movable.getId()).saveAttackAction();
         } else if (type == ZombieHandVars::TYPE) {
-            GameManager::instance()->getTurret(movable.getId()).sendServAttackAction();
+            GameManager::instance()->getTurret(movable.getId()).saveAttackAction();
         } else {
             GameManager::instance()->getPlayer().sendServAttackAction();
         }
