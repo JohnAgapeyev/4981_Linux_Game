@@ -4,14 +4,19 @@
 #include "Inventory.h"
 #include "../game/GameManager.h"
 #include "../log/log.h"
+#include "../client/NetworkManager.h"
 
-Inventory::Inventory(): defaultGun(GameManager::instance()->generateID()),
-        tempZombieHand(GameManager::instance()->generateID()) {
-    weaponIds[0] = defaultGun.getID();
+Inventory::Inventory()
+    : tempZombieHand(GameManager::instance()->generateID()) {
+    if (!networked) {
+        defaultGun = HandGun(GameManager::instance()->generateID());
+        weaponIds[0] = defaultGun.getID();
+        GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<HandGun>(defaultGun)));
+    } else {
+        weaponIds[0] = -1;
+    }
     weaponIds[1] = -1;
     weaponIds[2] = -1;
-    GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<HandGun>(defaultGun)));
-
 }
 
 
@@ -167,4 +172,3 @@ void Inventory::scrollCurrent(int direction) {
      weaponIds[0] = tGun.getID();
      GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<TurretGun>(tGun)));
  }
- 

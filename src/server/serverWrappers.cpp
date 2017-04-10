@@ -345,7 +345,7 @@ void processClientUsername(const int sock, const char *buff, std::pair<const int
     strcat(client.second.entry.username, "\0");
     logv("Server received username: %s\n", client.second.entry.username);
 
-    const size_t bufferSize = NAMELEN + TCP_HEADER_SIZE + 1;
+    const size_t bufferSize = NAMELEN + TCP_HEADER_SIZE + 1 + sizeof(int32_t);
     char outBuff[bufferSize];
     memset(outBuff, '\0', bufferSize);
     int32_t *id = reinterpret_cast<int32_t *>(outBuff);
@@ -353,12 +353,15 @@ void processClientUsername(const int sock, const char *buff, std::pair<const int
     outBuff[4] = 'C';
     outBuff[5] = '/';
 
-    strncpy(outBuff + TCP_HEADER_SIZE + 1, client.second.entry.username, NAMELEN);
-
     gm->createMarine(client.first);
     auto& marine = gm->getMarine(client.first).first;
     const auto& spawnPoint = base.getSpawnPoint();
     marine.setPosition(spawnPoint.first, spawnPoint.second);
+
+    strncpy(outBuff + TCP_HEADER_SIZE + 1, client.second.entry.username, NAMELEN);
+    assert(marine.inventory.getCurrent());
+    const int32_t defaultWeaponId = marine.inventory.getCurrent()->getID();
+    memcpy(outBuff + TCP_HEADER_SIZE + 1 + NAMELEN, &defaultWeaponId, sizeof(int32_t));
 
     //Send client their allocated id and username
     if (!rawClientSend(sock, outBuff, bufferSize)) {
