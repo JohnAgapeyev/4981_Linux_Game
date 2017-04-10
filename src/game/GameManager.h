@@ -66,6 +66,7 @@ public:
     int32_t createMarine();
     bool createMarine(const float x, const float y);
     void createMarine(const int32_t id);
+    void createMarine(const int32_t id, const int32_t weaponId);
     void deleteMarine(const int32_t id);
 
     bool addMarine(const int32_t id, const Marine& newMarine);
@@ -94,9 +95,6 @@ public:
     // returns the list of zombies.
     // Jamie, 2017-03-01.
     auto& getZombies() {return zombieManager;};
-
-    int32_t addObject(const Object&);
-    void deleteObject(const int32_t id);
 
     int32_t addZombie(const Zombie&);
     void createZombie(const int32_t id);
@@ -165,7 +163,6 @@ public:
     auto& getBarricadeManager() const {return barricadeManager;};
     auto& getWallManager() {return wallManager;};
     auto& getDropPointManager() const {return dropPointManager;};
-    auto& getObjectManager() {return objectManager;};
 
 private:
     GameManager();
@@ -179,7 +176,6 @@ private:
     std::array<std::array<bool, M_WIDTH>, M_HEIGHT> AiMap;
     std::unique_ptr<WeaponDrop> wdPointer;
     GameHashMap<int32_t, Marine> marineManager;
-    GameHashMap<int32_t, Object> objectManager;
     GameHashMap<int32_t, Zombie> zombieManager;
     GameHashMap<int32_t, Turret> turretManager;
     GameHashMap<int32_t, WeaponDrop> weaponDropManager;

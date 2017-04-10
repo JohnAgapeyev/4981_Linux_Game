@@ -61,8 +61,6 @@ bool GameStateMatch::load() {
 #endif
     }
 
-    GameManager::instance()->addObject(GameManager::instance()->getBase());
-
 
     bool success = true;
     //set the boundary on the map

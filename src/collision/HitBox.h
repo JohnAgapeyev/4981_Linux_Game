@@ -27,6 +27,7 @@ public:
 
     void move(const float x, const float y);
     void setRect(const SDL_Rect& rect);
+    SDL_Rect& getRect() {return rect;};
     const SDL_Rect& getRect() const;
 
     void setFriendly(const bool isFriendly);

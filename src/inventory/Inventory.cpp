@@ -6,12 +6,11 @@
 #include "../log/log.h"
 #include "../client/NetworkManager.h"
 
-Inventory::Inventory()
-    : tempZombieHand(GameManager::instance()->generateID()) {
+Inventory::Inventory() {
     if (!networked) {
-        defaultGun = HandGun(GameManager::instance()->generateID());
-        weaponIds[0] = defaultGun.getID();
-        GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<HandGun>(defaultGun)));
+        HandGun hGun(GameManager::instance()->generateID());
+        GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<HandGun>(hGun)));
+        weaponIds[0] = hGun.getID();
     } else {
         weaponIds[0] = -1;
     }
@@ -144,20 +143,6 @@ void Inventory::scrollCurrent(int direction) {
  }
 
  /**
-  * Date: Mar. 31, 2017
-  * Author: Mark Tattrie
-  * Function Interface:  void Inventory::initZombie()
-  * Description:
-  * function to initialize a zombies inventory
-  */
- void Inventory::initZombie(){
-     weaponIds[0] = tempZombieHand.getID();
-     weaponIds[1] = -1;
-     weaponIds[2] = -1;
-     GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>
-            (std::make_shared<ZombieHand>(tempZombieHand)));
- }
- /**
  * Date: Mar. 30, 2017
  * Designer: Mark Chen
  * Programmer: Mark Chen
@@ -172,3 +157,19 @@ void Inventory::scrollCurrent(int direction) {
      weaponIds[0] = tGun.getID();
      GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<TurretGun>(tGun)));
  }
+
+/**
+* Date: April 10, 2017
+* Designer: Mark Tattrie
+* Programmer: Mark Tattire
+* Function Interface: void makeZombieInv()
+* Description:
+* Switches the defaultGun to a ZombieHand.
+*/
+void Inventory::makeZombieInv() {
+    //Weapon *w = getCurrent();
+    GameManager::instance()->removeWeapon(weaponIds[current]);
+    ZombieHand zHand(GameManager::instance()->generateID());
+    weaponIds[0] = zHand.getID();
+    GameManager::instance()->addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<ZombieHand>(zHand)));
+}

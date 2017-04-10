@@ -98,8 +98,9 @@ void parseControlMsg(const void *msgBuff, size_t bytesReads) {
         case 'C': // NEW CONNECTIONS ONLY!
             if (*pBuff++ == '/') {
                 // insertplayer new player
-                std::string msg(pBuff, bytesReads - sizeof(int32_t) - sizeof(char));
-                GameManager::instance()->createMarine(id);
+                std::string msg(pBuff, bytesReads - sizeof(int32_t) - sizeof(char) - sizeof(int32_t));
+                pBuff += UNAME_SIZE;
+                GameManager::instance()->createMarine(id, *reinterpret_cast<const int *>(pBuff));
             }
             break;
         case 'T':

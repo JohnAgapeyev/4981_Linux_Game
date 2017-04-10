@@ -23,10 +23,10 @@
  */
 MeleeWeapon::MeleeWeapon(const string& type, TEXTURES sprite, const string& fireSound,
         const string& hitSound, const string& reloadSound, const string& emptySound, const int range,
-        const int damage, const int AOE, const int penetration, const int clip, const int clipMax,
+        const int damage, const int AOE, const int penetration, const int accuracy, const int clip, const int clipMax,
         const int ammo, const int reloadDelay, const int fireDelay, int32_t id)
 : Weapon(type, sprite, fireSound, hitSound, reloadSound, emptySound, range, damage, AOE,
-        penetration, clip, clipMax, ammo, reloadDelay, fireDelay, id) {
+        penetration, accuracy, clip, clipMax, ammo, reloadDelay, fireDelay, id) {
 
 }
 
@@ -39,7 +39,7 @@ MeleeWeapon::MeleeWeapon(const string& type, TEXTURES sprite, const string& fire
  * of it based on the range of the weapon. Then checks for collision between that hitbox and other
  * objects.
  */
-bool MeleeWeapon::fire(const float x, const float y, const double angle){
+bool MeleeWeapon::fire(const float x, const float y, const double angle) {
     if (!Weapon::fire(x, y, angle)) {
         return false;
     }
@@ -49,8 +49,8 @@ bool MeleeWeapon::fire(const float x, const float y, const double angle){
 
     const int originX = x + (Z_WIDTH / 2);
     const int originY = y + (Z_HEIGHT / 2);
-    const int deltaX  = range/2 * cos(radians);
-    const int deltaY  = range/2 * sin(radians);
+    const int deltaX  = range / 2 * cos(radians);
+    const int deltaY  = range / 2 * sin(radians);
 
     const int endX = originX + deltaX;
     const int endY = originY + deltaY;
@@ -60,30 +60,25 @@ bool MeleeWeapon::fire(const float x, const float y, const double angle){
     const int hitBoxW = range;
     const int hitBoxH = range;
 
-    SDL_Rect meleeBox = {hitBoxX, hitBoxY, hitBoxW, hitBoxH};
-    HitBox hitBox(meleeBox);
+    HitBox hitBox({hitBoxX, hitBoxY, hitBoxW, hitBoxH});
+    CollisionHandler& ch = GameManager::instance()->getCollisionHandler();
 
-    CollisionHandler &ch = GameManager::instance()->getCollisionHandler();
-
-    std::vector<Entity *> hitMarines = ch.detectMeleeCollision(ch.getMarineTree(), hitBox);
-    for(const auto& x: hitMarines){
+    Entity tempEntity(0, hitBox.getRect());
+    for(const auto& x: ch.detectMeleeCollision(ch.getMarineTree().retrieve(&tempEntity), hitBox)) {
         //update hit marine
         x->collidingProjectile(damage);
     }
 
-    std::vector<Entity *> hitTurrets = ch.detectMeleeCollision(ch.getTurretTree(), hitBox);
-    for(const auto& x: hitTurrets){
-        //update hit marine
-        x->collidingProjectile(damage);
+    for(const auto& y : ch.detectMeleeCollision(ch.getTurretTree().retrieve(&tempEntity), hitBox)) {
+        //update hit turret
+        y->collidingProjectile(damage);
     }
 
-    std::vector<Entity *> hitBarricades = ch.detectMeleeCollision(ch.getBarricadeTree(), hitBox);
-    for(const auto& x: hitBarricades){
-        //update hit marine
-        x->collidingProjectile(damage);
+    for(const auto& z : ch.detectMeleeCollision(ch.getBarricadeTree().retrieve(&tempEntity), hitBox)) {
+        //update hit barricade
+        z->collidingProjectile(damage);
     }
-
-    clip++;
+    ++clip;
 
     return true;
 }

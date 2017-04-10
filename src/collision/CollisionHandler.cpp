@@ -43,27 +43,6 @@ CollisionHandler::CollisionHandler() : zombieMovementTree(0, {0,0,2000,2000}), m
 }
 
 /**
- * Date: Mar. 1, 2017
- * Modified: Mar. 15 2017 - Mark Tattrie
- * Author: Jacob McPhail.
- * Function Interface: CollisionHandler& CollisionHandler::operator=(const CollisionHandler& handle)
- * Description:
- * Comparison operator for = to set each Quadtree
- */
-CollisionHandler& CollisionHandler::operator=(const CollisionHandler& handle) {
-    zombieMovementTree = handle.zombieMovementTree;
-    marineTree = handle.marineTree;
-    zombieTree = handle.zombieTree;
-    barricadeTree = handle.barricadeTree;
-    turretTree = handle.turretTree;
-    wallTree = handle.wallTree;
-    pickUpTree = handle.pickUpTree;
-    objTree = handle.objTree;
-    storeTree = handle.storeTree;
-    return *this;
-}
-
-/**
  * Date: Feb. 4, 2017
  * Modified: Mar. 15 2017 - Mark Tattrie
  * Author: Jacob McPhail.
@@ -184,8 +163,13 @@ void CollisionHandler::detectLineCollision(TargetList& targetList, const int gun
     targetList.setEndX(endX);
     targetList.setEndY(endY);
 
-    checkForTargetsInVector(gunX, gunY, endX, endY, targetList, zombieTree.getObjects(), TYPE_ZOMBIE);
-    checkForTargetsInVector(gunX, gunY, endX, endY, targetList, wallTree.getObjects(), TYPE_WALL);
+    Entity dummy(0, {(endX - gunX) / 2, (endY - gunY) / 2, 100, 100});
+
+    const auto& nearbyZombies = zombieTree.retrieve(&dummy);
+    const auto& nearbyWalls = wallTree.retrieve(&dummy);
+
+    checkForTargetsInVector(gunX, gunY, endX, endY, targetList, nearbyZombies, TYPE_ZOMBIE);
+    checkForTargetsInVector(gunX, gunY, endX, endY, targetList, nearbyWalls, TYPE_WALL);
 
     logv(3, "CollisionHandler::detectLineCollision() targetsInSights.size(): %d\n", targetList.numTargets());
 }
@@ -199,9 +183,9 @@ void CollisionHandler::detectLineCollision(TargetList& targetList, const int gun
  * returns a vector of entities that have a damage hitbox collision between the vector of entities
  * and the entity you pass in
  */
-std::vector<Entity *> CollisionHandler::detectMeleeCollision(const Quadtree& q, const HitBox hb) {
+std::vector<Entity *> CollisionHandler::detectMeleeCollision(std::vector<Entity *> entities, const HitBox& hb) {
     std::vector<Entity*> allEntities;
-    for (const auto& obj: q.getObjects()) {
+    for (const auto& obj: entities) {
         if (SDL_HasIntersection(&hb.getRect(), &obj->getDamHitBox().getRect())) {
             allEntities.push_back(obj);
         }

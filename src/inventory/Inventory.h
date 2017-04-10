@@ -32,15 +32,14 @@ public:
     Weapon *getWeaponFromInventory(int inventorySlot); //returns the weapon in the inventory slot specified
     int getCurretSlot() const {return current;}; //returns the current sloted selected int the inventory
     void makeTurretInv();//swaps the default gun to a turretGun
+    void makeZombieInv();
+    void setDefault(int32_t weaponId) {weaponIds[0] = weaponId;};
     Inventory();
     ~Inventory() = default;
-    void initZombie();
 
 private:
-    ZombieHand tempZombieHand;
     int current = 0;//current weapon
     std::array<int32_t, 3> weaponIds; //array of weapon ids
-    HandGun defaultGun;
 
     //temp for now, in the future this will simply be a pointer to a consumable which is null initially
     //when this is updated, update the getMedkit function

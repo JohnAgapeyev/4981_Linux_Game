@@ -47,12 +47,10 @@ public:
 
     void detectLineCollision(TargetList& targetList, const int gunX, const int gunY, const double angle, const int range);
 
-    std::vector<Entity *> detectMeleeCollision(const Quadtree& q, const HitBox hb);
+    std::vector<Entity *> detectMeleeCollision(std::vector<Entity *> entities, const HitBox& hb);
     std::vector<Entity *>getQuadTreeEntities(Quadtree& q, const Entity *entity); // General Collision handler, pass in quadtree check
 
     std::vector<Entity *>getQuadTreeEntities(const Quadtree& q, const Entity *entity) const; // General Collision handler, pass in quadtree check
-
-    CollisionHandler& operator=(const CollisionHandler& handle);
 
     void clear();
     void insertMarine(Entity *e);
