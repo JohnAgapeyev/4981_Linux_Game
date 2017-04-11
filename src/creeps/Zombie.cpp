@@ -200,9 +200,8 @@ void Zombie::collidingProjectile(int damage) {
     if (health <= 0) {
 #ifndef SERVER
         VisualEffect::instance().addBody(getDestRect(),getId());
-#else
-        GameManager::instance()->deleteZombie(getId());
 #endif
+        GameManager::instance()->deleteZombie(getId());
 #ifndef SERVER
     } else {
         VisualEffect::instance().addBlood(getDestRect());
