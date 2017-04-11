@@ -348,10 +348,8 @@ void GameManager::createMarine(const int32_t id, const int32_t weaponId) {
 
     addWeapon(std::dynamic_pointer_cast<Weapon>(
             std::make_shared<HandGun>(HandGun(weaponId))));
-    if (id == NetworkManager::instance().getPlayerId()) {
-        marineManager[id].first.inventory.setDefault(weaponId);
-        assert(marineManager[id].first.inventory.getCurrent()->getID() == weaponId);
-    }
+    marineManager[id].first.inventory.setDefault(weaponId);
+    assert(marineManager[id].first.inventory.getCurrent()->getID() == weaponId);
 }
 
 /**
