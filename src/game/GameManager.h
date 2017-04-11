@@ -63,6 +63,8 @@ public:
     int32_t tempId;
     int32_t generateID();
 
+    void sendServDeleteAction(const UDPHeaders type, const int32_t id) const;
+
     void renderObjects(const SDL_Rect& cam); // Render all objects in level
 
     // Methods for creating, getting, and deleting marines from the level.

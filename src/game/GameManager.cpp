@@ -24,6 +24,14 @@ int32_t GameManager::generateID() {
     return ++counter;
 }
 
+void GameManager::sendServDeleteAction(const UDPHeaders type, const int32_t id) const {
+    ClientMessage packet;
+    packet.id = static_cast<int32_t>(UDPHeaders::DELETE);
+    packet.data.da.entitytype = type;
+    packet.data.da.entityid = id;
+    NetworkManager::instance().writeUDPSocket(reinterpret_cast<char *>(&packet), sizeof(ClientMessage));
+}
+
 /**
  * Date: Feb. 4, 2017
  * Modified: ----
@@ -366,6 +374,8 @@ void GameManager::deleteMarine(const int32_t id) {
     marineManager.erase(id);
 #ifdef SERVER
     saveDeletion({UDPHeaders::MARINE, id});
+#else
+    sendServDeleteAction(UDPHeaders::MARINE, id);
 #endif
 }
 
@@ -441,6 +451,8 @@ void GameManager::deleteTurret(const int32_t id) {
     turretManager.erase(id);
 #ifdef SERVER
     saveDeletion({UDPHeaders::TURRET, id});
+#else
+    sendServDeleteAction(UDPHeaders::TURRET, id);
 #endif
 }
 
@@ -570,6 +582,8 @@ void GameManager::deleteZombie(const int32_t id) {
     zombieManager.erase(id);
 #ifdef SERVER
     saveDeletion({UDPHeaders::ZOMBIE, id});
+#else
+    sendServDeleteAction(UDPHeaders::ZOMBIE, id);
 #endif
 }
 
@@ -603,6 +617,8 @@ void GameManager::removeWeapon(const int32_t id) {
     weaponManager.erase(id);
 #ifdef SERVER
     saveDeletion({UDPHeaders::WEAPON, id});
+#else
+    sendServDeleteAction(UDPHeaders::WEAPON, id);
 #endif
 }
 
@@ -661,6 +677,8 @@ void GameManager::deleteWeaponDrop(const int32_t id) {
     weaponDropManager.erase(id);
 #ifdef SERVER
     saveDeletion({UDPHeaders::WEAPONDROP, id});
+#else
+    sendServDeleteAction(UDPHeaders::WEAPONDROP, id);
 #endif
 }
 
@@ -981,6 +999,8 @@ void GameManager::deleteBarricade(const int32_t id) {
     barricadeManager.erase(id);
 #ifdef SERVER
     saveDeletion({UDPHeaders::BARRICADE, id});
+#else
+    sendServDeleteAction(UDPHeaders::BARRICADE, id);
 #endif
 }
 

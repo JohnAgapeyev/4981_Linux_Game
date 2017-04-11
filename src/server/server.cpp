@@ -177,7 +177,8 @@ void processPacket(const char *data) {
         case UDPHeaders::DELETE:
             {
                 const DeleteAction& da = mesg->data.da;
-                deleteEntity(da);
+                //deleteEntity(da);
+                saveDeletion(da);
             }
         case UDPHeaders::WEAPONDROPREQUEST:
             {
