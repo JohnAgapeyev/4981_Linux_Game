@@ -123,8 +123,6 @@ void InstantWeapon::fireSingleProjectile(const int gunX, const int gunY, const d
     int finalX = targetList.getEndX();
     int finalY = targetList.getEndY();
 
-    printf("Firing your gun\n");
-
     for(int i = 0; i <= penetration; i++) {
         if (targetList.isEmpty()) {
             logv(3, "targets.empty()\n");

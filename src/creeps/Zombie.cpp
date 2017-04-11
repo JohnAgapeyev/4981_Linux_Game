@@ -221,7 +221,6 @@ void Zombie::collidingProjectile(int damage) {
  * Calls the zombies current weapon "ZombieHands" to fire
  */
 void Zombie::zAttack(){
-    std::cout << "zAttack" << std::endl;
     if (!networked && inventory.getCurrent()->fire(getX(), getY(), getAngle())) {
 #ifdef SERVER
         saveAttackAction();
