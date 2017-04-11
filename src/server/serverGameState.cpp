@@ -65,15 +65,7 @@ void performAttack(const AttackAction& aa) {
         case UDPHeaders::MARINE:
             if (gm->hasMarine(aa.entityid)) {
                 auto& marine = gm->getMarine(aa.entityid);
-                marine.setPosition(aa.xpos, aa.ypos);
-                marine.setAngle(aa.direction);
-
-                /* Using marine.fireWeapon instead because weapon ids aren't implemented and I wanted
-                to get shooting working. From Brody */
-                //const auto& weapon = gm->getWeapon(aa.weaponid);
-                //weapon->fire(marine);
-
-                marine.fireWeapon();
+                GameManager::instance()->getWeapon(aa.weaponid).fire(aa.xpos, aa.ypos, aa.direction);
             } else {
                 logv("Marine not found with id %d\n", aa.entityid);
             }

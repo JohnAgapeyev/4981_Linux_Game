@@ -139,6 +139,7 @@ void Player::sendServAttackAction() {
         return;
     }
     attackAction.data.aa.weaponid = weapon->getID();
+    std::cout << "attacka action OUT weapon id: " << attackAction.data.aa.weaponid << std::endl;
     attackAction.data.aa.xpos = marine->getX();
     attackAction.data.aa.ypos = marine->getY();
     attackAction.data.aa.direction = marine->getAngle();
