@@ -222,7 +222,9 @@ void Zombie::zAttack(){
             saveAttackAction();
         }
 #else
-        w->fire(getX(), getY(), getAngle());
+        if (!networked) {
+            w->fire(getX(), getY(), getAngle());
+        }
 #endif
         //should only add a new animation if a different one isnt playing
         if (actionTick < frameCount) {
