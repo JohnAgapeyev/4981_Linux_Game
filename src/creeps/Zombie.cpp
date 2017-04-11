@@ -215,24 +215,15 @@ void Zombie::collidingProjectile(int damage) {
  * Calls the zombies current weapon "ZombieHands" to fire
  */
 void Zombie::zAttack(){
-    Weapon* w = inventory.getCurrent();
-    if (w) {
+    if (!networked && inventory.getCurrent()->fire(getX(), getY(), getAngle())) {
 #ifdef SERVER
-        if (w->fire(getX(), getY(), getAngle())) {
-            saveAttackAction();
-        }
-#else
-        if (!networked) {
-            w->fire(getX(), getY(), getAngle());
-        }
+        saveAttackAction();
 #endif
-        //should only add a new animation if a different one isnt playing
-        if (actionTick < frameCount) {
-            action = 'a';
-            actionTick = frameCount + ATTACK_DURATION;
-        }
-    } else {
-        logv("Zombie Slot Empty\n");
+    }
+    //should only add a new animation if a different one isnt playing
+    if (actionTick < frameCount) {
+        action = 'a';
+        actionTick = frameCount + ATTACK_DURATION;
     }
 }
 
