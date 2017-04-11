@@ -151,6 +151,7 @@ void Player::sendServWeaponPurchaseAction() {
     weaponDropAction.data.wda.xpos = marine->getX();
     weaponDropAction.data.wda.ypos = marine->getY();
     weaponDropAction.data.wda.weaponid = -1;
+
     NetworkManager::instance().writeUDPSocket(reinterpret_cast<char *>(&weaponDropAction), sizeof(ClientMessage));
 }
 

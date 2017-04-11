@@ -39,7 +39,7 @@ int32_t WeaponStore::purchase(const int num){
 
         const int32_t wDropId = gm->createWeaponDrop(x, y, weaponId);
 
-        logv("Purchased From WeaponStore\n");
+        printf("Purchased From WeaponStore\n");
 
         if(gm->weaponDropExists(wDropId)){
             gm->getWeaponDrop(wDropId).setDropPoint(dropPId);
