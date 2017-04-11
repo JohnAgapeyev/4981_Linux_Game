@@ -102,6 +102,7 @@ void parseControlMsg(const void *msgBuff, size_t bytesReads) {
                 pBuff += UNAME_SIZE;
                 auto sub = msg.substr(msg.size() - 5);
                 int32_t test = *reinterpret_cast<const int32_t *>(msg.substr(msg.size() - 5).c_str());
+                std::cout << "weapon id: " << test << std::endl;
                 GameManager::instance()->createMarine(id, *reinterpret_cast<const int32_t *>(msg.substr(msg.size() - 5).c_str()));
             }
             break;
@@ -166,7 +167,6 @@ void parseGameSync(const void *syncBuff, size_t bytesReads) {
                 }
                 break;
             case UDPHeaders::ATTACKACTIONH:
-                std::cout << "Num attack actions: " << *pBuff << std::endl;
                 for (int32_t i = 0, aCount = *pBuff++; i < aCount; ++i) {
                     attack = reinterpret_cast<AttackAction *>(pBuff);
                     GameManager::instance()->handleAttackAction(*attack);
