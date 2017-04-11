@@ -255,11 +255,9 @@ void NetworkManager::handshake(const std::string username) const {
   -------------------------------------------------------------------------------*/
 void NetworkManager::waitRecvId() {
     char buffrecv[STD_BUFFSIZE];
-    readTCPSocket(buffrecv, STD_BUFFSIZE);
+    parseControlMsg(buffrecv, readTCPSocket(buffrecv, STD_BUFFSIZE));
     const int32_t *idp = reinterpret_cast<const int32_t *>(buffrecv);
     myid = *idp; // storing ID
-    const int weaponId = *reinterpret_cast<int *>(buffrecv + 38);
-    GameManager::instance()->createMarine(myid, weaponId);
 }
 
 /**------------------------------------------------------------------------------
