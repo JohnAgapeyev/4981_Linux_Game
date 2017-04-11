@@ -197,11 +197,13 @@ void Zombie::move(const float moveX, const float moveY, CollisionHandler& ch) {
  */
 void Zombie::collidingProjectile(int damage) {
     health -= damage;
+#ifndef SERVER
     VisualEffect::instance().addBlood(getDestRect());
     if (actionTick < frameCount) {
         action = 'd';
         actionTick = frameCount + HIT_DURATION;
     }
+#endif
     if (health <= 0) {
         GameManager::instance()->deleteZombie(getId());
     }
@@ -220,11 +222,13 @@ void Zombie::zAttack(){
         saveAttackAction();
 #endif
     }
+#ifndef SERVER
     //should only add a new animation if a different one isnt playing
     if (actionTick < frameCount) {
         action = 'a';
         actionTick = frameCount + ATTACK_DURATION;
     }
+#endif
 }
 
 

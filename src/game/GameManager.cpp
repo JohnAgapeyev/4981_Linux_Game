@@ -905,14 +905,7 @@ void GameManager::handleAttackAction(const AttackAction& attackAction) {
         case UDPHeaders::ZOMBIE:
             if (zombieExists(attackAction.entityid)) {
                 auto zombie = getZombie(attackAction.entityid);
-                const int curX = zombie.getX();
-                const int curY = zombie.getY();
-                const double curAngle = zombie.getAngle();
-                zombie.setPosition(attackAction.xpos, attackAction.ypos);
-                zombie.setAngle(attackAction.direction);
                 zombie.zAttack();
-                zombie.setPosition(curX, curY);
-                zombie.setAngle(curAngle);
             }
             break;
         case UDPHeaders::TURRET:
