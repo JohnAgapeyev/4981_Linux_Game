@@ -373,7 +373,7 @@ void processClientUsername(const int sock, const char *buff, std::pair<const int
     const int32_t again = marine.inventory.getCurrent()->getID();
     memcpy(outBuff + NAMELEN, &again, sizeof(int32_t));
 
-    sendTCPClientMessage(client.first, true, outBuff, bufferSize);
+    sendTCPClientMessage(client.first, true, outBuff, NAMELEN + sizeof(int32_t));
 
     updateClientWithCurrentLobby(sock, outBuff, bufferSize);
 }
