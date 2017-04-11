@@ -64,8 +64,7 @@ void performAttack(const AttackAction& aa) {
     switch(aa.entitytype) {
         case UDPHeaders::MARINE:
             if (gm->hasMarine(aa.entityid)) {
-                auto& marine = gm->getMarine(aa.entityid);
-                GameManager::instance()->getWeapon(aa.weaponid).fire(aa.xpos, aa.ypos, aa.direction);
+                GameManager::instance()->getWeapon(aa.weaponid)->fire(aa.xpos, aa.ypos, aa.direction);
             } else {
                 logv("Marine not found with id %d\n", aa.entityid);
             }
