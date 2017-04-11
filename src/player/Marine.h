@@ -20,7 +20,6 @@ static constexpr int SPRITE_SIZE_X = 75;
 static constexpr int SPRITE_SIZE_Y = 125;
 //speed of walking animation ie frames till next animation
 static constexpr int FRAME_COUNT_WALK = 7;
-//base health of marine
 static constexpr int MARINE_MAX_HEALTH = 100;
 
 static constexpr int SPRITE_RIGHT = SPRITE_SIZE_Y * 2;

@@ -1,3 +1,20 @@
+/*------------------------------------------------------------------------------
+* Source: Rifle.h        
+*
+* Functions:
+*
+* Date: 
+*
+* Revisions: 
+* Edited By : Tim Makimov on 2017/APR/10
+*
+* Designer: 
+*
+* Author: 
+*
+* Notes:
+------------------------------------------------------------------------------*/
+
 /*
     Created by Maitiu Morton 2/8/2017
         Edited by MarkT 3/13/2017
@@ -33,6 +50,9 @@ namespace RifleVars {
 
     constexpr int RELOADDELAY = 2000;
     constexpr int FIREDELAY = 180;
+
+    constexpr int START_X = 891;
+    constexpr int START_Y = 379;
 }
 
 class Rifle: public InstantWeapon {
