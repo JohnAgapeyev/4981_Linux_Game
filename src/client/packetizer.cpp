@@ -164,6 +164,7 @@ void parseGameSync(const void *syncBuff, size_t bytesReads) {
                 }
                 break;
             case UDPHeaders::ATTACKACTIONH:
+                std::cout << "Num attack actions: " << *pBuff << std::endl;
                 for (int32_t i = 0, aCount = *pBuff++; i < aCount; ++i) {
                     attack = reinterpret_cast<AttackAction *>(pBuff);
                     GameManager::instance()->handleAttackAction(*attack);

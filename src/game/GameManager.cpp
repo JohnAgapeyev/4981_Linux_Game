@@ -898,15 +898,8 @@ void GameManager::handleAttackAction(const AttackAction& attackAction) {
     switch(attackAction.entitytype) {
         case UDPHeaders::MARINE:
             if (attackAction.entityid != player.getId()) {
-                auto marine = getMarine(attackAction.entityid);
-                const int curX = marine.getX();
-                const int curY = marine.getY();
-                const double curAngle = marine.getAngle();
-                marine.setPosition(attackAction.xpos, attackAction.ypos);
-                marine.setAngle(attackAction.direction);
-                marine.fireWeapon();
-                marine.setPosition(curX, curY);
-                marine.setAngle(curAngle);
+                weaponManager[attackAction.weaponid].fire(
+                    attackAction.xpos, attackAction.ypos, attackAction.direction);
             }
             break;
         case UDPHeaders::ZOMBIE:
