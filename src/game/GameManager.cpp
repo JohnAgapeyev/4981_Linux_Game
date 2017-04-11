@@ -898,7 +898,7 @@ void GameManager::handleAttackAction(const AttackAction& attackAction) {
     switch(attackAction.entitytype) {
         case UDPHeaders::MARINE:
             if (attackAction.entityid != player.getId()) {
-                weaponManager[attackAction.weaponid].fire(
+                getWeapon(attackAction.weaponid)->fire(
                     attackAction.xpos, attackAction.ypos, attackAction.direction);
             }
             break;
