@@ -248,7 +248,7 @@ void Zombie::zAttack(){
 *       walking. It is called from GameManager::updateMarines every frame.
 */
 void Zombie::updateImageWalk() {
-    std::cout << "update image walk" << std::endl;
+    //std::cout << "update image walk" << std::endl;
     ++frameCount;
 
     const float dy = getDY();

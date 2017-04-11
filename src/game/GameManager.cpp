@@ -348,10 +348,10 @@ void GameManager::createMarine(const int32_t id, const int32_t weaponId) {
     std::cout << "adding default weapon" << std::endl;
     addWeapon(std::dynamic_pointer_cast<Weapon>(
             std::make_shared<HandGun>(HandGun(weaponId))));
-    if (id == GameManager::instance()->getPlayer().getId()) {
+    //if (id == GameManager::instance()->getPlayer().getId()) {
         marineManager[id].first.inventory.setDefault(weaponId);
         assert(marineManager[id].first.inventory.getCurrent()->getID() == weaponId);
-    }
+    //}
 }
 
 /**
@@ -900,7 +900,6 @@ void GameManager::handleAttackAction(const AttackAction& attackAction) {
     switch(attackAction.entitytype) {
         case UDPHeaders::MARINE:
             if (attackAction.entityid != player.getId()) {
-                std::cout << "attack action weapoon id" << attackAction.entityid << std::endl;
                 getWeapon(attackAction.weaponid)->fire(
                     attackAction.xpos, attackAction.ypos, attackAction.direction);
             }
