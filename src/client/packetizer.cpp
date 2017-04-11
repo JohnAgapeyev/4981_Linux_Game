@@ -100,7 +100,7 @@ void parseControlMsg(const void *msgBuff, size_t bytesReads) {
                 // insertplayer new player
                 std::string msg(pBuff, bytesReads - sizeof(int32_t) - sizeof(char));
                 pBuff += UNAME_SIZE;
-                GameManager::instance()->createMarine(id, std::stoi(msg.substr(msg.size() - 5)));
+                GameManager::instance()->createMarine(id, *reinterpret_cast<const int32_t *>(msg.substr(msg.size() - 5).c_str()));
             }
             break;
         case 'T':
