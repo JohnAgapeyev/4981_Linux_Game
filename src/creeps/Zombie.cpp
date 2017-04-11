@@ -197,15 +197,20 @@ void Zombie::move(const float moveX, const float moveY, CollisionHandler& ch) {
  */
 void Zombie::collidingProjectile(int damage) {
     health -= damage;
-#ifndef SERVER
-    VisualEffect::instance().addBlood(getDestRect());
-    if (actionTick < frameCount) {
-        action = 'd';
-        actionTick = frameCount + HIT_DURATION;
-    }
-#endif
     if (health <= 0) {
+#ifndef SERVER
+        VisualEffect::instance().addBody(getDestRect(),getId());
+#else
         GameManager::instance()->deleteZombie(getId());
+#endif
+#ifndef SERVER
+    } else {
+        VisualEffect::instance().addBlood(getDestRect());
+        if (actionTick < frameCount) {
+            action = 'd';
+            actionTick = frameCount + HIT_DURATION;
+        }
+#endif
     }
 }
 
