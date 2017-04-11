@@ -350,6 +350,7 @@ void GameManager::createMarine(const int32_t id, const int32_t weaponId) {
             std::make_shared<HandGun>(HandGun(weaponId))));
     if (id == NetworkManager::instance().getPlayerId()) {
         marineManager[id].first.inventory.setDefault(weaponId);
+        assert(marineManager[id].first.inventory.getCurrent()->getID() == weaponId);
     }
 }
 
@@ -847,6 +848,7 @@ playData struct, if not it creates a marine with that id. Whether it
 created it or not it updates it's positition angle and health.
 */
 void GameManager::updateMarine(const PlayerData& playerData) {
+    assert(marineManager.count(playerData.playerid) == 1);
     if (marineManager.count(playerData.playerid) == 0) {
         createMarine(playerData.playerid);
     }
