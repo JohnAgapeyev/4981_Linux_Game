@@ -231,9 +231,6 @@ void Player::handleMouseUpdate(const int winWidth, const int winHeight, const fl
     } else if (SDL_GetMouseState(nullptr, nullptr)  &SDL_BUTTON(SDL_BUTTON_LEFT)) {
         if (currentTime > shootDelay) {
             if(marine->inventory.getCurrent()) {
-                if (networked) {
-                    GameManager::instance()->getPlayer().sendServAttackAction();
-                }
                 marine->fireWeapon();
             }
             shootDelay = 0;

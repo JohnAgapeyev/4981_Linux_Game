@@ -60,7 +60,7 @@ static constexpr int WALL_HEIGHT = 250;
 class GameManager {
 public:
     static GameManager *instance();
-
+    int32_t tempId;
     int32_t generateID();
 
     void renderObjects(const SDL_Rect& cam); // Render all objects in level
