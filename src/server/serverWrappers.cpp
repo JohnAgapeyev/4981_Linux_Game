@@ -368,12 +368,21 @@ void processClientUsername(const int sock, const char *buff, std::pair<const int
         return;
     }
 
-    memset(outBuff, 0, bufferSize);
-    strncpy(outBuff, client.second.entry.username, NAMELEN);
-    const int32_t again = marine.inventory.getCurrent()->getID();
-    memcpy(outBuff + NAMELEN, &again, sizeof(int32_t));
 
-    sendTCPClientMessage(client.first, true, outBuff, NAMELEN + sizeof(int32_t));
+
+    for (const auto& clients : clientList) {
+        if (clients.first != client.first && clients.second.hasSentUsername) {
+            rawClientSend(clients.second.entry.sock, outBuff, bufferSize);
+        }
+    }
+
+    //memset(outBuff, 0, bufferSize);
+    //strncpy(outBuff, client.second.entry.username, NAMELEN);
+    //const int32_t again = marine.inventory.getCurrent()->getID();
+    //memcpy(outBuff + NAMELEN, &again, sizeof(int32_t));
+
+    //sendTCPClientMessage(client.first, true, outBuff, NAMELEN + sizeof(int32_t));
+    //sendTCPClientMessage(client.first, true, outBuff, bufferSize);
 
     updateClientWithCurrentLobby(sock, outBuff, bufferSize);
 }
