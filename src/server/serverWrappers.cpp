@@ -361,7 +361,7 @@ void processClientUsername(const int sock, const char *buff, std::pair<const int
     strncpy(outBuff + TCP_HEADER_SIZE + 1, client.second.entry.username, NAMELEN);
     assert(marine.inventory.getCurrent());
     const int32_t defaultWeaponId = marine.inventory.getCurrent()->getID();
-    memcpy(outBuff + TCP_HEADER_SIZE + 1 + NAMELEN, &defaultWeaponId, sizeof(int32_t));
+    memcpy(outBuff + TCP_HEADER_SIZE + 0 + NAMELEN, &defaultWeaponId, sizeof(int32_t));
 
     //Send client their allocated id and username
     if (!rawClientSend(sock, outBuff, bufferSize)) {
