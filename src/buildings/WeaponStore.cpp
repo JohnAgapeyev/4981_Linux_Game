@@ -60,7 +60,7 @@ int32_t WeaponStore::purchase(const int num){
                 return -1;
         }
         wda.weaponid = weaponId;
-        //saveDrop(wda);
+        saveDrop(wda);
 #endif
         return weaponId;
     }
