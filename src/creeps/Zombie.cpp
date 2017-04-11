@@ -68,7 +68,7 @@ void Zombie::saveAttackAction() const {
  * Date: April 6, 2017
  */
 void Zombie::update(){
-    ++frameCount;
+    //++frameCount;
     //middle of me
     const int midMeX = getX() + (getW() / 2);
     const int midMeY = getY() + (getH() / 2);
@@ -217,6 +217,7 @@ void Zombie::collidingProjectile(int damage) {
  * Calls the zombies current weapon "ZombieHands" to fire
  */
 void Zombie::zAttack(){
+    std::cout << "zAttack" << std::endl;
     if (!networked && inventory.getCurrent()->fire(getX(), getY(), getAngle())) {
 #ifdef SERVER
         saveAttackAction();
@@ -247,6 +248,8 @@ void Zombie::zAttack(){
 *       walking. It is called from GameManager::updateMarines every frame.
 */
 void Zombie::updateImageWalk() {
+    ++frameCount;
+
     const float dy = getDY();
     const float dx = getDX();
     if (dy > 0) {

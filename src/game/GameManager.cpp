@@ -413,7 +413,7 @@ Marine& GameManager::getMarine(const int32_t id) {
  */
 int32_t GameManager::createTurret() {
     const int32_t id = generateID();
-    SDL_Rect temp = {INITVAL, INITVAL, DEFAULT_SIZE, DEFAULT_SIZE};
+    SDL_Rect temp = {INITVAL, INITVAL, TURRET_WIDTH, TURRET_HEIGHT};
 
     SDL_Rect turretRect = temp;
     SDL_Rect moveRect = temp;
@@ -475,7 +475,7 @@ bool GameManager::hasTurret(const int32_t id) const {
  */
 int32_t GameManager::createTurret(const float x, const float y) {
     const int32_t id = generateID();
-    SDL_Rect temp = {INITVAL, INITVAL, DEFAULT_SIZE, TURRET_SIZE_H};
+    SDL_Rect temp = {INITVAL, INITVAL, TURRET_SIZE_H, TURRET_SIZE_H};
 
     SDL_Rect turretRect = temp;
     SDL_Rect moveRect = temp;
@@ -522,7 +522,7 @@ int32_t GameManager::addZombie(const Zombie& newZombie) {
 }
 
 void GameManager::createZombie(const int32_t id) {
-    SDL_Rect temp = {INITVAL, INITVAL, DEFAULT_SIZE, DEFAULT_SIZE};
+    SDL_Rect temp = {INITVAL, INITVAL, ZOMBIE_WIDTH, ZOMBIE_HEIGHT};
 
     SDL_Rect zombieRect = temp;
     SDL_Rect moveRect = temp;
