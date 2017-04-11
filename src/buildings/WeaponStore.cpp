@@ -6,6 +6,7 @@
 #include "../inventory/weapons/HandGun.h"
 #include "DropPoint.h"
 #include <memory>
+#include "../server/servergamestate.h"
 
 /*
 int32_t id of the Store
