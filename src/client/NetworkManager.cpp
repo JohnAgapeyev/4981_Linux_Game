@@ -14,6 +14,7 @@
 #include "NetworkManager.h"
 #include "packetizer.h"
 #include "../log/log.h"
+#include "../game/GameManager.h"
 
 using namespace std;
 
@@ -169,7 +170,6 @@ void NetworkManager::initTCPClient(const in_addr_t serverIP, const std::string u
 }
 
 void NetworkManager::runTCPClient(const std::string username) {
-    logv("Username in runTCPClient: %s\n", username.c_str());
     handshake(username);
     waitRecvId();
 
@@ -201,7 +201,7 @@ void NetworkManager::runTCPClient(const std::string username) {
 
         if (FD_ISSET(sockTCP, &readSet)) {
             if ((bytesRead = readTCPSocket(buffrecv, STD_BUFFSIZE)) == 0) {
-                logv("TCP Copnnection closed by server. (Bytes read == 0)\n");
+                logv("Server disconnected\n");
                 break;
             }
 
@@ -255,9 +255,11 @@ void NetworkManager::handshake(const std::string username) const {
   -------------------------------------------------------------------------------*/
 void NetworkManager::waitRecvId() {
     char buffrecv[STD_BUFFSIZE];
-    parseControlMsg(buffrecv, readTCPSocket(buffrecv, STD_BUFFSIZE));
+    readTCPSocket(buffrecv, STD_BUFFSIZE);
     const int32_t *idp = reinterpret_cast<const int32_t *>(buffrecv);
     myid = *idp; // storing ID
+    const int weaponId = *reinterpret_cast<int *>(buffrecv + 38);
+    GameManager::instance()->createMarine(myid, weaponId);
 }
 
 /**------------------------------------------------------------------------------
