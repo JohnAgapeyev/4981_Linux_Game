@@ -62,6 +62,7 @@ public:
     void updateImageWalk();
     void updateLifeState();
     void activateStore(const Entity *ep);
+    bool checkStoreCollision();
     Inventory inventory;
     void setHealth(const int hlth) {health = hlth;};
     int getCurrentHealth() {return health;}; //returns the current health of the marine

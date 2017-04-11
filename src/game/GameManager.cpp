@@ -820,12 +820,9 @@ playData struct, if not it creates a marine with that id. Whether it
 created it or not it updates it's positition angle and health.
 */
 void GameManager::updateMarine(const PlayerData& playerData) {
-    assert(marineManager.count(playerData.playerid) == 1);
-    /*
     if (marineManager.count(playerData.playerid) == 0) {
         createMarine(playerData.playerid);
     }
-    */
     Marine& marine = marineManager[playerData.playerid].first;
     marine.setPosition(playerData.xpos, playerData.ypos);
     marine.setDX(playerData.xdel);
@@ -918,13 +915,18 @@ void GameManager::handleAttackAction(const AttackAction& attackAction) {
 }
 
 void GameManager::handleWeaponDrop(const WeaponDropAction& weaponDropAction) {
+    std::cout << "handleWeaponDrop" << std::endl;
     if (weaponDropAction.weapontype == UDPHeaders::RIFLE) {
+        std::cout << "weaponDropAction.weapontype == UDPHeaders::RIFLE" << std::endl;
         addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(weaponDropAction.weaponid)));
     } else if(weaponDropAction.weapontype == UDPHeaders::SHOTGUN) {
+        std::cout << "weaponDropAction.weapontype == UDPHeaders::SHOTGUN" << std::endl;
         addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<ShotGun>(weaponDropAction.weaponid)));
     } else if(weaponDropAction.weapontype == UDPHeaders::PISTOL) {
+        std::cout << "weaponDropAction.weapontype == UDPHeaders::HANDGUN" << std::endl;
         addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<HandGun>(weaponDropAction.weaponid)));
     }
+    std::cout << "createWeaponDrop(" << weaponDropAction.xpos << ", " << weaponDropAction.ypos << ", " << weaponDropAction.weaponid << ");" << std::endl;
     createWeaponDrop(weaponDropAction.xpos, weaponDropAction.ypos, weaponDropAction.weaponid);
 }
 

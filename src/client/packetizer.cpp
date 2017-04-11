@@ -178,6 +178,7 @@ void parseGameSync(const void *syncBuff, size_t bytesReads) {
                 }
                 break;
             case UDPHeaders::WEAPONDROPREQUEST:
+                std::cout << "case UDPHeaders::WEAPONDROPREQUEST" << std::endl;
                 for (int32_t i = 0, wCount = *pBuff++; i < wCount; ++i){
                     weaponDrop = reinterpret_cast<WeaponDropAction *>(pBuff);
                     GameManager::instance()->handleWeaponDrop(*weaponDrop);

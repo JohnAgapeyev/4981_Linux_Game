@@ -27,7 +27,6 @@ WeaponStore::~WeaponStore(){
  *int num what the player wants to purchase
  */
 int32_t WeaponStore::purchase(const int num){
-
     GameManager *gm = GameManager::instance();
     if(gm->checkFreeDropPoints()){
         const int32_t dropPId = gm->getFreeDropPointId();
@@ -44,6 +43,25 @@ int32_t WeaponStore::purchase(const int num){
         if(gm->weaponDropExists(wDropId)){
             gm->getWeaponDrop(wDropId).setDropPoint(dropPId);
         }
+
+#ifdef SERVER
+        WeaponDropAction wda;
+        wda.xpos = x;
+        wda.ypos = y;
+        switch (num) {
+            case 1:
+                wda.weapontype = UDPHeaders::RIFLE;
+                break;
+            case 2:
+                wda.weapontype = UDPHeaders::SHOTGUN;
+                break;
+            default:
+                logv("Unknown weapon type requested.\n");
+                return -1;
+        }
+        wda.weaponid = weaponId;
+        //saveDrop(wda);
+#endif
         return weaponId;
     }
     logv("NO OPEN DROP POINTS!!!\n");

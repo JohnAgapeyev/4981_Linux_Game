@@ -331,6 +331,7 @@ typedef struct {
 
 //x, y, id, type
 typedef struct {
+    int32_t playerid;
     float xpos;
     float ypos;
     UDPHeaders weapontype;

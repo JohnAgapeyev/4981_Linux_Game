@@ -146,6 +146,8 @@ void Player::sendServDeleteAction(int32_t weaponId) {
 }
 
 void Player::sendServWeaponPurchaseAction() {
+    std::cout << "weapon purhcase requested." << std::endl;
+    weaponDropAction.data.wda.playerid = marine->getId();
     weaponDropAction.data.wda.xpos = marine->getX();
     weaponDropAction.data.wda.ypos = marine->getY();
     weaponDropAction.data.wda.weaponid = -1;
@@ -255,7 +257,7 @@ void Player::handlePlacementClick(SDL_Renderer *renderer) {
 *
 * Description:
 *   Handle user key input.
-* 
+*
 * Revisions:
 * Apr. 10, 2017, Alex Zielinski - implemented sound effects that occur with menu interactions by keyboard
 */
