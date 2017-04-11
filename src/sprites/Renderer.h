@@ -135,6 +135,9 @@ const std::string TYPE_75K_INVENTORY_TEXTURE = "assets/texture/hud/inventoryItem
 const std::string KATANA_INVENTORY_TEXTURE = "assets/texture/hud/inventoryItems/katana.png";
 const std::string PHASE_REPEATER_INVENTORY_TEXTURE = "assets/texture/hud/inventoryItems/phaseRepeater.png";
 
+//------------- Turret Textures ------------------
+const std::string TURRET_TEXTURE = "assets/texture/Building/turret.png";
+
 //------------- Equipped Weapon Textures ------------------
 const std::string SHOTGUN_EQUIPPED_TEXTURE = "assets/texture/hud/inventoryItems/shotgunEquipped.png";
 const std::string RIFLE_EQUIPPED_TEXTURE = "assets/texture/hud/inventoryItems/assaultRifleEquipped.png";
@@ -164,6 +167,7 @@ const std::string ZOMBIE_BOSS = SPRITE_PATH + "zombieboss.png";
 
 //-------- Marine Sprite Sheet --------
 const std::string PLAYER_MOHAWK = SPRITE_PATH + "mohawk.png";
+const std::string PLAYER_COWBOY = SPRITE_PATH + "cowboy.png";
 
 //-------- Weapons Sprite Sheet --------
 const std::string WEAPONS = SPRITE_PATH + "weapons.png";
@@ -176,7 +180,7 @@ const std::string BLOOD_TEXTURE = "assets/texture/blood.png";
 
 static constexpr int TEXTURE_SIZE = 250; //size of the texture
 static constexpr int MARINE_SIZE = 100; //size of the marine
-static constexpr int TOTAL_SPRITES = 44; //number of total sprites
+static constexpr int TOTAL_SPRITES = 45; //number of total sprites
 
 
 class Renderer {
