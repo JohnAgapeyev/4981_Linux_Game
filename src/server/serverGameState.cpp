@@ -117,8 +117,8 @@ void processTurret(const TurretAction& ta) {
         tempTurret.pickUpTurret();
         tempTurret.setPosition(ta.xpos, ta.ypos);
     } else if (ta.actionid == UDPHeaders::DROPOFF) {
-        tempTurret.placeTurret();
-        tempTurret.setPosition(ta.xpos, ta.ypos);
+        //tempTurret.placeTurret();
+        //tempTurret.setPosition(ta.xpos, ta.ypos);
     } else {
         logv("Received turret packet with unknown action id\n");
     }
