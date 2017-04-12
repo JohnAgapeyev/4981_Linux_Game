@@ -885,10 +885,10 @@ playData struct, if not it creates a marine with that id. Whether it
 created it or not it updates it's positition angle and health.
 */
 void GameManager::updateMarine(const PlayerData& playerData) {
-    assert(marineManager.count(playerData.playerid) == 1);
     if (marineManager.count(playerData.playerid) == 0) {
         createMarine(playerData.playerid);
     }
+    assert(marineManager.count(playerData.playerid) == 1);
     Marine& marine = marineManager[playerData.playerid].first;
     marine.setPosition(playerData.xpos, playerData.ypos);
     marine.setDX(playerData.xdel);
