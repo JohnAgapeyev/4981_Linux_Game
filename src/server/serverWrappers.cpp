@@ -402,8 +402,10 @@ void updateClientWithCurrentLobby(const int sock, char *outBuff, const size_t bu
             outBuff[4] = 'C';
             outBuff[5] = '/';
             strncpy(outBuff + TCP_HEADER_SIZE + 1, it.second.entry.username, NAMELEN);
-            const int32_t defaultWeaponId = GameManager::instance()->getMarine(*id).inventory.getCurrent()->getID();
+            const int32_t defaultWeaponId = GameManager::instance()->getMarine(it.first).inventory.getCurrent()->getID();
             memcpy(outBuff + TCP_HEADER_SIZE + 0 + NAMELEN, &defaultWeaponId, sizeof(int32_t));
+
+            printf("Sending weapon id %d\n", defaultWeaponId);
 
             if (!rawClientSend(sock, outBuff, bufferSize)) {
                 break;
