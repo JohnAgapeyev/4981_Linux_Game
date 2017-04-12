@@ -591,6 +591,7 @@ int32_t GameManager::createZombie(const float x, const float y) {
  *     Deletes zombie from level.
  */
 void GameManager::deleteZombie(const int32_t id) {
+    printf("Deleting zombie\n");
     zombieManager.erase(id);
 #ifdef SERVER
     saveDeletion({UDPHeaders::ZOMBIE, id});
