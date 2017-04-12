@@ -64,6 +64,7 @@ public:
     int32_t generateID();
 
     void sendServDeleteAction(const UDPHeaders type, const int32_t id) const;
+    void sendServTurretAction(const float x, const float y) const;
 
     void renderObjects(const SDL_Rect& cam); // Render all objects in level
 

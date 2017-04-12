@@ -32,6 +32,16 @@ void GameManager::sendServDeleteAction(const UDPHeaders type, const int32_t id) 
     NetworkManager::instance().writeUDPSocket(reinterpret_cast<char *>(&packet), sizeof(ClientMessage));
 }
 
+void GameManager::sendServTurretAction(const float x, const float y) const {
+    ClientMessage packet;
+    packet.id = static_cast<int32_t>(UDPHeaders::TURRETACTIONH);
+    packet.data.ta.turretid = -1;
+    packet.data.ta.actionid = UDPHeaders::DROPOFF;
+    packet.data.ta.xpos = x;
+    packet.data.ta.ypos = y;
+    NetworkManager::instance().writeUDPSocket(reinterpret_cast<char *>(&packet), sizeof(ClientMessage));
+}
+
 /**
  * Date: Feb. 4, 2017
  * Modified: ----
@@ -504,6 +514,12 @@ int32_t GameManager::createTurret(const float x, const float y) {
     const auto& elem = turretManager.emplace(id, Turret(id, turretRect, moveRect, projRect, damRect,
         pickRect));
     elem->second.setPosition(x,y);
+
+#ifndef SERVER
+    if (networked) {
+        sendServTurretAction(x, y);
+    }
+#endif
     return id;
 }
 
@@ -976,7 +992,7 @@ void GameManager::handleWeaponDrop(const WeaponDropAction& weaponDropAction) {
 
 void GameManager::updateTurret(const TurretData& turretData) {
     if(turretManager.find(turretData.turretid) == turretManager.end()) {
-        createTurret();
+        createTurret(turretData.xpos, turretData.ypos);
     }
     Turret& turret = turretManager[turretData.turretid].first;
     turret.setPosition(turretData.xpos, turretData.ypos);
