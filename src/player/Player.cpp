@@ -139,7 +139,6 @@ void Player::sendServAttackAction() {
         return;
     }
     attackAction.data.aa.weaponid = weapon->getID();
-    std::cout << "attacka action OUT weapon id: " << attackAction.data.aa.weaponid << std::endl;
     attackAction.data.aa.xpos = marine->getX();
     attackAction.data.aa.ypos = marine->getY();
     attackAction.data.aa.direction = marine->getAngle();
@@ -154,7 +153,6 @@ void Player::sendServDeleteAction(int32_t weaponId) {
 }
 
 void Player::sendServWeaponPurchaseAction() {
-    std::cout << "weapon purhcase requested." << std::endl;
     weaponDropAction.data.wda.playerid = marine->getId();
     weaponDropAction.data.wda.xpos = marine->getX();
     weaponDropAction.data.wda.ypos = marine->getY();

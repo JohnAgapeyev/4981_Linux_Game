@@ -363,13 +363,10 @@ void GameManager::createMarine(const int32_t id) {
 
 void GameManager::createMarine(const int32_t id, const int32_t weaponId) {
     createMarine(id);
-    std::cout << "adding default weapon" << std::endl;
     addWeapon(std::dynamic_pointer_cast<Weapon>(
             std::make_shared<HandGun>(HandGun(weaponId))));
-    //if (id == GameManager::instance()->getPlayer().getId()) {
-        marineManager[id].first.inventory.setDefault(weaponId);
-        assert(marineManager[id].first.inventory.getCurrent()->getID() == weaponId);
-    //}
+    marineManager[id].first.inventory.setDefault(weaponId);
+    assert(marineManager[id].first.inventory.getCurrent()->getID() == weaponId);
 }
 
 /**
@@ -970,18 +967,13 @@ void GameManager::handleAttackAction(const AttackAction& attackAction) {
 }
 
 void GameManager::handleWeaponDrop(const WeaponDropAction& weaponDropAction) {
-    std::cout << "handleWeaponDrop" << std::endl;
     if (weaponDropAction.weapontype == UDPHeaders::RIFLE) {
-        std::cout << "weaponDropAction.weapontype == UDPHeaders::RIFLE" << std::endl;
         addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<Rifle>(weaponDropAction.weaponid)));
     } else if(weaponDropAction.weapontype == UDPHeaders::SHOTGUN) {
-        std::cout << "weaponDropAction.weapontype == UDPHeaders::SHOTGUN" << std::endl;
         addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<ShotGun>(weaponDropAction.weaponid)));
     } else if(weaponDropAction.weapontype == UDPHeaders::PISTOL) {
-        std::cout << "weaponDropAction.weapontype == UDPHeaders::HANDGUN" << std::endl;
         addWeapon(std::dynamic_pointer_cast<Weapon>(std::make_shared<HandGun>(weaponDropAction.weaponid)));
     }
-    std::cout << "createWeaponDrop(" << weaponDropAction.xpos << ", " << weaponDropAction.ypos << ", " << weaponDropAction.weaponid << ");" << std::endl;
     createWeaponDrop(weaponDropAction.xpos, weaponDropAction.ypos, weaponDropAction.weaponid);
 }
 
