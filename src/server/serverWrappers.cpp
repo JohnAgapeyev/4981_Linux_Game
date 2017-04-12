@@ -369,7 +369,7 @@ void processClientUsername(const int sock, const char *buff, std::pair<const int
     }
 
 
-
+    printf("Client list size: %lu\n", clientList.size());
     for (const auto& clients : clientList) {
         if (clients.first != client.first && clients.second.hasSentUsername) {
             rawClientSend(clients.second.entry.sock, outBuff, bufferSize);
