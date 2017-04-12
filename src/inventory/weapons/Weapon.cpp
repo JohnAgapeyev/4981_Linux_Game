@@ -131,6 +131,7 @@ bool Weapon::fire(const float x, const float y, const double angle) {
 #ifndef SERVER
     if (networked && GameManager::instance()->tempId == GameManager::instance()->getPlayer().getId()) {
         GameManager::instance()->getPlayer().sendServAttackAction();
+        GameManager::instance()->tempId = -1;
     }
     AudioManager::instance().playEffect(fireSound.c_str());
 #endif
