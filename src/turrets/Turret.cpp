@@ -277,6 +277,11 @@ void Turret::move(const float playerX, const float playerY,
 void Turret::placeTurret() {
     placed = true;
     activated = true;
+#ifndef SERVER
+    if (networked) {
+        GameManager::instance()->sendServTurretAction(getX(), getY());
+    }
+#endif
 }
 
 /**

@@ -515,11 +515,6 @@ int32_t GameManager::createTurret(const float x, const float y) {
         pickRect));
     elem->second.setPosition(x,y);
 
-#ifndef SERVER
-    if (networked) {
-        sendServTurretAction(x, y);
-    }
-#endif
     return id;
 }
 
