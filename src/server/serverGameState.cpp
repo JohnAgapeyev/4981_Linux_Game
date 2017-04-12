@@ -111,7 +111,8 @@ void processBarricade(const BarricadeAction& ba) {
 
 void processTurret(const TurretAction& ta) {
     std::lock_guard<std::mutex> lock(mut);
-    Turret& tempTurret = GameManager::instance()->getTurret(ta.turretid);
+    int32_t id = GameManager::instance()->createTurret(ta.xpos, ta.ypos);
+    Turret& tempTurret = GameManager::instance()->getTurret(id);
     if (ta.actionid == UDPHeaders::PICKUP) {
         tempTurret.pickUpTurret();
         tempTurret.setPosition(ta.xpos, ta.ypos);

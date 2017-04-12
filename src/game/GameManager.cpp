@@ -991,11 +991,10 @@ void GameManager::handleWeaponDrop(const WeaponDropAction& weaponDropAction) {
 }
 
 void GameManager::updateTurret(const TurretData& turretData) {
-    int32_t id = -1;
     if(turretManager.find(turretData.turretid) == turretManager.end()) {
-        id = createTurret(turretData.xpos, turretData.ypos);
+        createTurret(turretData.xpos, turretData.ypos);
     }
-    Turret& turret = turretManager[id].first;
+    Turret& turret = turretManager[turretData.turretid].first;
     turret.setPosition(turretData.xpos, turretData.ypos);
     turret.setAngle(turretData.direction);
     turret.setHealth(turretData.health);
