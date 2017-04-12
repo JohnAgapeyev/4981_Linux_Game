@@ -375,7 +375,9 @@ void GameManager::deleteMarine(const int32_t id) {
 #ifdef SERVER
     saveDeletion({UDPHeaders::MARINE, id});
 #else
-    sendServDeleteAction(UDPHeaders::MARINE, id);
+    if (networked) {
+        sendServDeleteAction(UDPHeaders::MARINE, id);
+    }
 #endif
 }
 
@@ -452,7 +454,9 @@ void GameManager::deleteTurret(const int32_t id) {
 #ifdef SERVER
     saveDeletion({UDPHeaders::TURRET, id});
 #else
-    sendServDeleteAction(UDPHeaders::TURRET, id);
+    if (networked) {
+        sendServDeleteAction(UDPHeaders::TURRET, id);
+    }
 #endif
 }
 
@@ -583,7 +587,9 @@ void GameManager::deleteZombie(const int32_t id) {
 #ifdef SERVER
     saveDeletion({UDPHeaders::ZOMBIE, id});
 #else
-    sendServDeleteAction(UDPHeaders::ZOMBIE, id);
+    if (networked) {
+        sendServDeleteAction(UDPHeaders::ZOMBIE, id);
+    }
 #endif
 }
 
@@ -618,7 +624,9 @@ void GameManager::removeWeapon(const int32_t id) {
 #ifdef SERVER
     saveDeletion({UDPHeaders::WEAPON, id});
 #else
-    sendServDeleteAction(UDPHeaders::WEAPON, id);
+    if (networked) {
+        sendServDeleteAction(UDPHeaders::WEAPON, id);
+    }
 #endif
 }
 
@@ -678,7 +686,9 @@ void GameManager::deleteWeaponDrop(const int32_t id) {
 #ifdef SERVER
     saveDeletion({UDPHeaders::WEAPONDROP, id});
 #else
-    sendServDeleteAction(UDPHeaders::WEAPONDROP, id);
+    if (networked) {
+        sendServDeleteAction(UDPHeaders::WEAPONDROP, id);
+    }
 #endif
 }
 
@@ -1000,7 +1010,9 @@ void GameManager::deleteBarricade(const int32_t id) {
 #ifdef SERVER
     saveDeletion({UDPHeaders::BARRICADE, id});
 #else
-    sendServDeleteAction(UDPHeaders::BARRICADE, id);
+    if (networked) {
+        sendServDeleteAction(UDPHeaders::BARRICADE, id);
+    }
 #endif
 }
 
