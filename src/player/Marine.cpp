@@ -64,6 +64,7 @@ void Marine::collidingProjectile(const int damage) {
 
 // Created by DericM 3/8/2017
 bool Marine::fireWeapon() {
+    GameManager::instance()->tempId = getId();
     Weapon *w = inventory.getCurrent();
     if(w) {
         return w->fire(getX(), getY(), getAngle());
